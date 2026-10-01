@@ -1,0 +1,35 @@
+{
+  "name": "@tm/database",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Schéma SQLite (Drizzle), migrations, seeds et outils d'exploitation.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./schema/schema.ts",
+    "./seeds": "./seeds/seed.ts"
+  },
+  "bin": {
+    "tm-db": "./src/cli.ts"
+  },
+  "scripts": {
+    "generate": "drizzle-kit generate",
+    "migrate": "tsx src/cli.ts migrate",
+    "seed": "tsx src/cli.ts seed",
+    "seed:demo": "tsx src/cli.ts seed --demo",
+    "backup": "tsx src/cli.ts backup",
+    "integrity": "tsx src/cli.ts integrity",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@tm/analytics": "workspace:*",
+    "@tm/shared-types": "workspace:*",
+    "better-sqlite3": "^13.0.3",
+    "drizzle-orm": "^0.45.0",
+    "tsx": "^4.20.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^9.6.0",
+    "drizzle-kit": "^0.31.5"
+  }
+}

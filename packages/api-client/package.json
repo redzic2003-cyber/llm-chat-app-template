@@ -1,0 +1,16 @@
+{
+  "name": "@tm/api-client",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Client HTTP typé pour l'API /api/v1 (web et mobile).",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@tm/shared-types": "workspace:*"
+  }
+}

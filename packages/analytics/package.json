@@ -1,0 +1,16 @@
+{
+  "name": "@tm/analytics",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Calculs statistiques et utilitaires de périodes (fuseau horaire, semaines ISO).",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@tm/shared-types": "workspace:*"
+  }
+}

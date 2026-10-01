@@ -1,0 +1,18 @@
+[Unit]
+Description=Training Manager — sauvegarde SQLite chiffrée
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=training-manager
+Group=training-manager
+EnvironmentFile=/etc/training-manager/backup.env
+ExecStart=/opt/training-manager/app/ops/backup/backup.sh
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/backups/training-manager
+ReadOnlyPaths=/var/lib/training-manager

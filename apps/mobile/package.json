@@ -1,0 +1,37 @@
+{
+  "name": "@tm/mobile",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Application mobile formateur (Vue 3 + Capacitor) : sessions du jour, scan QR, validation.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit",
+    "cap:sync": "vite build && cap sync",
+    "cap:android": "cap open android",
+    "cap:ios": "cap open ios"
+  },
+  "dependencies": {
+    "@aparajita/capacitor-secure-storage": "^8.0.1",
+    "@capacitor-mlkit/barcode-scanning": "^8.2.1",
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/ios": "^8.5.2",
+    "@capacitor/preferences": "^8.0.1",
+    "@tm/api-client": "workspace:*",
+    "@tm/qr-core": "workspace:*",
+    "@tm/shared-types": "workspace:*",
+    "jsqr": "^1.4.0",
+    "vue": "^3.5.22",
+    "vue-router": "^4.6.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.2",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "vite": "^7.1.0",
+    "vue-tsc": "^3.1.0"
+  }
+}

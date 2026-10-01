@@ -1,0 +1,38 @@
+{
+  "reportType": "monthly",
+  "period": {
+    "from": "2026-09-01",
+    "to": "2026-09-30",
+    "label": "Septembre 2026"
+  },
+  "summary": {
+    "sessions": 18,
+    "participations": 126,
+    "uniqueParticipants": 72,
+    "trainingHours": 31.5,
+    "participantHours": 284.0,
+    "attendanceRate": 94.1
+  },
+  "trainingBreakdown": [
+    {
+      "reference": "SEC-001",
+      "title": "Sécurité incendie",
+      "participants": 44
+    },
+    {
+      "reference": "TRH-001",
+      "title": "Travail en hauteur",
+      "participants": 31
+    }
+  ],
+  "dailySeries": [
+    {
+      "date": "2026-09-03",
+      "participants": 8
+    },
+    {
+      "date": "2026-09-10",
+      "participants": 12
+    }
+  ]
+}

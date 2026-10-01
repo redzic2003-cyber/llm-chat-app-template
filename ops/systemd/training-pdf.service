@@ -1,0 +1,33 @@
+[Unit]
+Description=Training Manager — service PDF (Rust + Krilla), écoute locale uniquement
+After=network.target
+
+[Service]
+Type=simple
+User=training-pdf
+Group=training-pdf
+Environment=PDF_BIND=127.0.0.1:8090
+Environment=RUST_LOG=info
+ExecStart=/opt/training-manager/pdf-service/training-pdf
+Restart=on-failure
+RestartSec=3
+
+# Le service ne lit ni n'écrit aucun fichier : il ne fait que transformer du JSON en PDF.
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictAddressFamilies=AF_INET AF_INET6
+LockPersonality=true
+MemoryDenyWriteExecute=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+MemoryMax=512M
+
+[Install]
+WantedBy=multi-user.target
