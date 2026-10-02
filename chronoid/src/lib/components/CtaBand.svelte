@@ -11,7 +11,7 @@
 		class="container-page flex flex-col gap-8 py-16 sm:py-20 lg:flex-row lg:items-center lg:justify-between"
 	>
 		<div class="max-w-2xl">
-			<h2 class="text-3xl font-bold tracking-tight text-balance sm:text-4xl">{m.cta_title()}</h2>
+			<h2 class="text-3xl title text-balance sm:text-4xl">{m.cta_title()}</h2>
 			<p class="mt-4 text-lg text-white/70">{m.cta_text()}</p>
 		</div>
 		<div class="flex shrink-0 flex-col gap-3 sm:flex-row">

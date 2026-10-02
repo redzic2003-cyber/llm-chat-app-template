@@ -1,6 +1,7 @@
 <script lang="ts">
 	import './layout.css';
 	import { page } from '$app/state';
+	import BrandFonts from '#lib/components/BrandFonts.svelte';
 	import Header from '#lib/components/Header.svelte';
 	import Footer from '#lib/components/Footer.svelte';
 	import { m } from '#lib/paraglide/messages.js';
@@ -12,6 +13,8 @@
 	const urlFor = (locale: (typeof locales)[number]) =>
 		new URL(hrefFor(page.url.pathname, locale), SITE_URL).href;
 </script>
+
+<BrandFonts />
 
 <svelte:head>
 	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />

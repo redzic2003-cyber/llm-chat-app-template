@@ -22,7 +22,7 @@
 
 		<div>
 			<p class="eyebrow">{m.mode_eyebrow()}</p>
-			<h2 class="mt-4 text-3xl font-bold tracking-tight text-balance sm:text-4xl">
+			<h2 class="mt-4 text-3xl title text-balance sm:text-4xl">
 				{m.mode_title()}
 			</h2>
 			<p class="mt-4 text-lg text-muted">{m.mode_text()}</p>

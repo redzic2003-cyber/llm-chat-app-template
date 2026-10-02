@@ -32,3 +32,9 @@ Quatre langues, une page prérendue par langue : `/` (français, par défaut), `
 - Ajouter une langue : l'ajouter dans `project.inlang/settings.json`, créer `messages/<code>.json`
   et compléter `localeNames` dans `src/lib/site.ts`.
 - Les balises `hreflang` et `canonical` utilisent `SITE_URL` (`src/lib/site.ts`) : à remplacer par le vrai domaine.
+
+## Police
+
+Neue Haas Unica (Monotype, licence web payante). Les fichiers ne sont pas dans le dépôt :
+déposez les `.woff2` dans `src/lib/assets/fonts/` (noms dans le README de ce dossier) et rebuildez.
+En attendant, le site s'affiche en Inter.

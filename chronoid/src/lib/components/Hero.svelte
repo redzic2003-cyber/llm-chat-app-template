@@ -19,7 +19,7 @@
 	<div class="relative container-page">
 		<div class="max-w-xl pt-28 pb-14 sm:pt-32 sm:pb-20 lg:pt-40 lg:pb-28">
 			<p class="eyebrow">{m.hero_eyebrow()}</p>
-			<h1 class="mt-5 text-4xl leading-[1.08] font-bold tracking-tight text-balance sm:text-5xl">
+			<h1 class="mt-5 text-4xl leading-[1.04] display text-balance sm:text-5xl">
 				{m.hero_title()}
 			</h1>
 			<p class="mt-6 max-w-md text-lg leading-relaxed text-muted">

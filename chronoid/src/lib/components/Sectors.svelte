@@ -9,7 +9,7 @@
 	<div class="container-page">
 		<div class="max-w-2xl">
 			<p class="eyebrow">{m.sectors_eyebrow()}</p>
-			<h2 class="mt-4 text-3xl font-bold tracking-tight text-balance sm:text-4xl">
+			<h2 class="mt-4 text-3xl title text-balance sm:text-4xl">
 				{m.sectors_title()}
 			</h2>
 			<p class="mt-4 text-lg text-muted">{m.sectors_text()}</p>
