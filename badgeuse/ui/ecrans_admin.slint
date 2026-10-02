@@ -1,0 +1,729 @@
+// Écrans d'administration.
+
+import { ListView } from "std-widgets.slint";
+import { Theme, Bouton, BoutonClair, Choix, EnTete, Carte } from "composants.slint";
+import { Etat } from "etat.slint";
+
+component Tuile inherits Rectangle {
+    in property <string> titre;
+    in property <string> pastille;
+    in property <color> couleur-pastille: Theme.rouge;
+    callback clic();
+
+    border-radius: Theme.rayon;
+    border-width: 2px;
+    border-color: Theme.bordure;
+    background: zone.pressed ? #E4E8EE : Theme.carte;
+
+    zone := TouchArea {
+        clicked => { root.clic(); }
+    }
+
+    Text {
+        text: root.titre;
+        font-size: 24px;
+        font-weight: 700;
+        color: Theme.texte;
+    }
+
+    if root.pastille != "": Rectangle {
+        x: parent.width - self.width - 10px;
+        y: 10px;
+        height: 34px;
+        width: max(34px, etiquette.preferred-width + 20px);
+        border-radius: 17px;
+        background: root.couleur-pastille;
+        etiquette := Text {
+            text: root.pastille;
+            color: white;
+            font-size: 18px;
+            font-weight: 800;
+        }
+    }
+}
+
+export component EcranAdminMenu inherits Rectangle {
+    background: Theme.fond;
+
+    VerticalLayout {
+        EnTete {
+            titre: "Administration";
+            retour: "Quitter";
+            droite: Etat.heure;
+            retour-clic => { Etat.action("accueil", 0, ""); }
+        }
+        GridLayout {
+            padding: 20px;
+            spacing: 16px;
+            Row {
+                Tuile {
+                    titre: "Présents";
+                    pastille: Etat.nb-presents + " / " + Etat.nb-salaries;
+                    couleur-pastille: Theme.vert;
+                    clic => { Etat.action("aller", 0, "presents"); }
+                }
+                Tuile { titre: "Heures"; clic => { Etat.action("aller", 0, "heures"); } }
+                Tuile {
+                    titre: "Oublis";
+                    pastille: Etat.nb-oublis > 0 ? Etat.nb-oublis : "";
+                    couleur-pastille: Theme.orange;
+                    clic => { Etat.action("aller", 0, "oublis"); }
+                }
+            }
+            Row {
+                Tuile {
+                    titre: "Signalements";
+                    pastille: Etat.nb-signalements > 0 ? Etat.nb-signalements : "";
+                    clic => { Etat.action("aller", 0, "signalements"); }
+                }
+                Tuile { titre: "Salariés"; clic => { Etat.action("aller", 0, "salaries"); } }
+                Tuile { titre: "Export"; clic => { Etat.action("aller", 0, "export"); } }
+            }
+            Row {
+                Tuile { titre: "Journal des modifications"; clic => { Etat.action("aller", 0, "journal"); } }
+                Tuile { titre: "Réglages"; clic => { Etat.action("aller", 0, "reglages"); } }
+                Rectangle { }
+            }
+        }
+    }
+}
+
+component Separateur inherits Rectangle {
+    height: 1px;
+    background: Theme.bordure;
+}
+
+export component EcranPresents inherits Rectangle {
+    background: Theme.fond;
+
+    VerticalLayout {
+        EnTete {
+            titre: "Présents (" + Etat.nb-presents + " / " + Etat.nb-salaries + ")";
+            retour: "Menu";
+            retour-clic => { Etat.action("aller", 0, "menu"); }
+        }
+        Carte {
+            vertical-stretch: 1;
+            ListView {
+                for p in Etat.presents: Rectangle {
+                    height: 58px;
+                    HorizontalLayout {
+                        padding-left: 16px;
+                        padding-right: 16px;
+                        spacing: 14px;
+                        Rectangle {
+                            width: 18px;
+                            Rectangle { width: 18px; height: 18px; border-radius: 9px; background: Theme.ton(p.ton); }
+                        }
+                        Text { width: 260px; text: p.nom; font-size: 22px; font-weight: 700; color: Theme.texte; vertical-alignment: center; overflow: elide; }
+                        Text { text: p.etat; font-size: 20px; color: Theme.texte-doux; vertical-alignment: center; }
+                        Text { width: 200px; text: p.detail; font-size: 20px; color: Theme.texte; horizontal-alignment: right; vertical-alignment: center; }
+                    }
+                    Separateur { y: parent.height - 1px; }
+                }
+            }
+        }
+    }
+}
+
+export component EcranHeures inherits Rectangle {
+    background: Theme.fond;
+    property <length> col-nom: 210px;
+    property <length> col-total: 110px;
+
+    VerticalLayout {
+        EnTete {
+            titre: "Heures";
+            retour: "Menu";
+            retour-clic => { Etat.action("aller", 0, "menu"); }
+        }
+        HorizontalLayout {
+            padding: 10px;
+            spacing: 12px;
+            alignment: center;
+            BoutonClair { width: 70px; texte: "◀"; clic => { Etat.action("semaine", -1, ""); } }
+            Text { width: 640px; text: Etat.semaine-titre; font-size: 21px; font-weight: 700; color: Theme.texte; horizontal-alignment: center; vertical-alignment: center; }
+            BoutonClair { width: 70px; texte: "▶"; clic => { Etat.action("semaine", 1, ""); } }
+        }
+        Carte {
+            vertical-stretch: 1;
+            VerticalLayout {
+                HorizontalLayout {
+                    height: 40px;
+                    padding-left: 12px;
+                    padding-right: 12px;
+                    Text { width: root.col-nom; text: "Nom"; font-size: 16px; font-weight: 700; color: Theme.texte-doux; vertical-alignment: center; }
+                    for j in Etat.semaine-jours: Text { text: j; font-size: 16px; font-weight: 700; color: Theme.texte-doux; horizontal-alignment: center; vertical-alignment: center; }
+                    Text { width: root.col-total; text: "TOTAL"; font-size: 16px; font-weight: 700; color: Theme.texte-doux; horizontal-alignment: right; vertical-alignment: center; }
+                }
+                Separateur { }
+                ListView {
+                    for l in Etat.semaine: Rectangle {
+                        height: 54px;
+                        background: zone.pressed ? #E4E8EE : transparent;
+                        zone := TouchArea {
+                            clicked => { Etat.action("detail-semaine", l.id, ""); }
+                        }
+                        HorizontalLayout {
+                            padding-left: 12px;
+                            padding-right: 12px;
+                            Text { width: root.col-nom; text: l.nom; font-size: 19px; font-weight: 700; color: Theme.texte; vertical-alignment: center; overflow: elide; }
+                            for c in l.jours: Text {
+                                text: c;
+                                font-size: 18px;
+                                color: c == "⚠" ? Theme.orange : Theme.texte;
+                                horizontal-alignment: center;
+                                vertical-alignment: center;
+                            }
+                            Text {
+                                width: root.col-total;
+                                text: (l.alerte ? "⚠ " : "") + l.total;
+                                font-size: 19px;
+                                font-weight: 800;
+                                color: l.alerte ? Theme.orange : Theme.texte;
+                                horizontal-alignment: right;
+                                vertical-alignment: center;
+                            }
+                        }
+                        Separateur { y: parent.height - 1px; }
+                    }
+                }
+            }
+        }
+        Text {
+            height: 34px;
+            text: "Touchez une ligne pour voir et corriger les pointages.   ⚠ = oubli de pointage";
+            font-size: 16px;
+            color: Theme.texte-doux;
+            horizontal-alignment: center;
+            vertical-alignment: center;
+        }
+    }
+}
+
+export component EcranDetail inherits Rectangle {
+    background: Theme.fond;
+
+    VerticalLayout {
+        EnTete {
+            titre: Etat.det-titre;
+            retour: "Retour";
+            retour-clic => { Etat.action("detail-retour", 0, ""); }
+        }
+        HorizontalLayout {
+            padding: 14px;
+            spacing: 14px;
+
+            VerticalLayout {
+                spacing: 10px;
+                horizontal-stretch: 1;
+                Carte {
+                    vertical-stretch: 1;
+                    ListView {
+                        for p in Etat.det-pointages: Rectangle {
+                            height: 62px;
+                            HorizontalLayout {
+                                padding: 6px;
+                                padding-left: 16px;
+                                spacing: 12px;
+                                Text { width: 110px; text: p.nature; font-size: 21px; font-weight: 700; color: Theme.texte; vertical-alignment: center; }
+                                Text { width: 90px; text: p.heure; font-size: 24px; font-weight: 800; color: Theme.texte; vertical-alignment: center; }
+                                Text { text: p.note; font-size: 16px; color: Theme.texte-doux; vertical-alignment: center; overflow: elide; }
+                                BoutonClair { width: 120px; texte: "Modifier"; taille: 18px; clic => { Etat.action("pt-modifier", p.id, ""); } }
+                                BoutonClair { width: 120px; texte: "Supprimer"; taille: 18px; couleur: Theme.rouge; clic => { Etat.action("pt-supprimer", p.id, ""); } }
+                            }
+                            Separateur { y: parent.height - 1px; }
+                        }
+                    }
+                }
+                if Etat.det-alerte != "": Text {
+                    text: "⚠ " + Etat.det-alerte;
+                    font-size: 20px;
+                    font-weight: 700;
+                    color: Theme.orange;
+                }
+                HorizontalLayout {
+                    spacing: 12px;
+                    BoutonClair { width: 70px; texte: "◀"; clic => { Etat.action("detail-jour", -1, ""); } }
+                    BoutonClair { width: 70px; texte: "▶"; clic => { Etat.action("detail-jour", 1, ""); } }
+                    Bouton { texte: "+ Ajouter"; clic => { Etat.action("pt-ajouter", 0, ""); } }
+                    Text {
+                        min-width: 240px;
+                        text: "Total : " + Etat.det-total;
+                        font-size: 22px;
+                        font-weight: 800;
+                        color: Theme.texte;
+                        horizontal-alignment: right;
+                        vertical-alignment: center;
+                    }
+                }
+            }
+
+            if Etat.det-demandes.length > 0: VerticalLayout {
+                width: 300px;
+                spacing: 10px;
+                Text { text: "Demandes du salarié"; font-size: 20px; font-weight: 800; color: Theme.texte; }
+                for d in Etat.det-demandes: Carte {
+                    VerticalLayout {
+                        padding: 12px;
+                        spacing: 10px;
+                        Text { text: d.texte; font-size: 18px; color: Theme.texte; wrap: word-wrap; }
+                        HorizontalLayout {
+                            spacing: 10px;
+                            Bouton { texte: "✔ Accepter"; taille: 18px; couleur: Theme.vert; clic => { Etat.action("demande-accepter", d.id, ""); } }
+                            Bouton { texte: "✖ Refuser"; taille: 18px; couleur: Theme.rouge; clic => { Etat.action("demande-refuser", d.id, ""); } }
+                        }
+                    }
+                }
+                Rectangle { vertical-stretch: 1; }
+            }
+        }
+    }
+}
+
+export component EcranOublis inherits Rectangle {
+    background: Theme.fond;
+
+    VerticalLayout {
+        EnTete {
+            titre: "Oublis de pointage";
+            retour: "Menu";
+            retour-clic => { Etat.action("aller", 0, "menu"); }
+        }
+        if Etat.oublis.length == 0: Text {
+            vertical-stretch: 1;
+            text: "Aucun oubli sur les 31 derniers jours  ✔";
+            font-size: 24px;
+            color: Theme.vert;
+            horizontal-alignment: center;
+            vertical-alignment: center;
+        }
+        if Etat.oublis.length > 0: Carte {
+            vertical-stretch: 1;
+            ListView {
+                for o in Etat.oublis: Rectangle {
+                    height: 58px;
+                    background: zone.pressed ? #E4E8EE : transparent;
+                    zone := TouchArea {
+                        clicked => { Etat.action("detail-oubli", o.salarie, o.date); }
+                    }
+                    HorizontalLayout {
+                        padding-left: 16px;
+                        padding-right: 16px;
+                        spacing: 14px;
+                        Text { width: 240px; text: o.nom; font-size: 21px; font-weight: 700; color: Theme.texte; vertical-alignment: center; overflow: elide; }
+                        Text { width: 150px; text: o.jour; font-size: 20px; color: Theme.texte; vertical-alignment: center; }
+                        Text { text: o.texte; font-size: 20px; color: Theme.orange; vertical-alignment: center; }
+                        if o.demande: Text { text: "Demande du salarié"; font-size: 18px; font-weight: 700; color: Theme.bleu; vertical-alignment: center; }
+                    }
+                    Separateur { y: parent.height - 1px; }
+                }
+            }
+        }
+    }
+}
+
+export component EcranSignalements inherits Rectangle {
+    background: Theme.fond;
+
+    VerticalLayout {
+        EnTete {
+            titre: "Signalements";
+            retour: "Menu";
+            retour-clic => { Etat.action("aller", 0, "menu"); }
+        }
+        HorizontalLayout {
+            padding: 10px;
+            spacing: 12px;
+            alignment: center;
+            Choix { width: 220px; texte: "À traiter"; choisi: Etat.sig-ouverts; clic => { Etat.action("sig-filtre", 1, ""); } }
+            Choix { width: 220px; texte: "Traités"; choisi: !Etat.sig-ouverts; clic => { Etat.action("sig-filtre", 0, ""); } }
+        }
+        if Etat.signalements.length == 0: Text {
+            vertical-stretch: 1;
+            text: "Rien à afficher";
+            font-size: 24px;
+            color: Theme.texte-doux;
+            horizontal-alignment: center;
+            vertical-alignment: center;
+        }
+        if Etat.signalements.length > 0: Carte {
+            vertical-stretch: 1;
+            ListView {
+                for s in Etat.signalements: Rectangle {
+                    height: 58px;
+                    background: zone.pressed ? #E4E8EE : transparent;
+                    zone := TouchArea {
+                        clicked => { Etat.action("signalement", s.id, ""); }
+                    }
+                    HorizontalLayout {
+                        padding-left: 16px;
+                        padding-right: 16px;
+                        spacing: 14px;
+                        Rectangle {
+                            width: 18px;
+                            Rectangle { width: 18px; height: 18px; border-radius: 9px; background: Theme.ton(s.ton); }
+                        }
+                        Text { width: 120px; text: s.quand; font-size: 17px; color: Theme.texte-doux; vertical-alignment: center; }
+                        Text { width: 215px; text: s.categorie; font-size: 18px; font-weight: 700; color: Theme.texte; vertical-alignment: center; }
+                        Text { width: 160px; text: s.qui; font-size: 18px; color: Theme.texte; vertical-alignment: center; overflow: elide; }
+                        Text { text: s.resume; font-size: 18px; color: Theme.texte-doux; vertical-alignment: center; overflow: elide; }
+                    }
+                    Separateur { y: parent.height - 1px; }
+                }
+            }
+        }
+    }
+}
+
+export component EcranSignalement inherits Rectangle {
+    background: Theme.fond;
+
+    VerticalLayout {
+        EnTete {
+            titre: Etat.sd-titre;
+            retour: "Liste";
+            droite: Etat.sd-statut;
+            retour-clic => { Etat.action("aller", 0, "signalements"); }
+        }
+        HorizontalLayout {
+            padding: 16px;
+            spacing: 16px;
+            Carte {
+                horizontal-stretch: 1;
+                VerticalLayout {
+                    padding: 18px;
+                    spacing: 10px;
+                    alignment: start;
+                    Text { text: Etat.sd-qui; font-size: 24px; font-weight: 800; color: Theme.texte; }
+                    Text { text: Etat.sd-quand; font-size: 19px; color: Theme.texte-doux; }
+                    Text { text: Etat.sd-infos; font-size: 21px; color: Theme.texte; wrap: word-wrap; }
+                    Text { text: Etat.sd-detail; font-size: 21px; color: Theme.texte; wrap: word-wrap; }
+                }
+            }
+            VerticalLayout {
+                width: 300px;
+                spacing: 12px;
+                alignment: start;
+                if Etat.sd-demande && Etat.sd-ouvert: Bouton {
+                    height: 72px;
+                    texte: "✔ Accepter";
+                    sous-texte: "ajoute le pointage";
+                    couleur: Theme.vert;
+                    clic => { Etat.action("sd-accepter", 0, ""); }
+                }
+                if Etat.sd-demande && Etat.sd-ouvert: Bouton {
+                    texte: "✖ Refuser";
+                    couleur: Theme.rouge;
+                    clic => { Etat.action("sd-refuser", 0, ""); }
+                }
+                if Etat.sd-demande: BoutonClair {
+                    texte: "Voir la journée";
+                    clic => { Etat.action("sd-journee", 0, ""); }
+                }
+                if !Etat.sd-demande && Etat.sd-ouvert: Bouton {
+                    texte: "En cours de traitement";
+                    couleur: Theme.orange;
+                    clic => { Etat.action("sd-statut", 0, "en_cours"); }
+                }
+                if !Etat.sd-demande && Etat.sd-ouvert: Bouton {
+                    texte: "✔ Résolu";
+                    couleur: Theme.vert;
+                    clic => { Etat.action("sd-statut", 0, "resolu"); }
+                }
+                if !Etat.sd-ouvert: BoutonClair {
+                    texte: "Rouvrir";
+                    clic => { Etat.action("sd-statut", 0, "nouveau"); }
+                }
+            }
+        }
+    }
+}
+
+export component EcranSalaries inherits Rectangle {
+    background: Theme.fond;
+
+    VerticalLayout {
+        EnTete {
+            titre: "Salariés";
+            retour: "Menu";
+            retour-clic => { Etat.action("aller", 0, "menu"); }
+        }
+        HorizontalLayout {
+            padding: 10px;
+            spacing: 12px;
+            Choix { width: 160px; texte: "Actifs"; choisi: Etat.sal-actifs; clic => { Etat.action("sal-filtre", 1, ""); } }
+            Choix { width: 160px; texte: "Inactifs"; choisi: !Etat.sal-actifs; clic => { Etat.action("sal-filtre", 0, ""); } }
+            Rectangle { horizontal-stretch: 1; }
+            Bouton { width: 220px; texte: "+ Ajouter"; couleur: Theme.vert; clic => { Etat.action("fiche", 0, ""); } }
+        }
+        Carte {
+            vertical-stretch: 1;
+            ListView {
+                for s in Etat.salaries: Rectangle {
+                    height: 58px;
+                    background: zone.pressed ? #E4E8EE : transparent;
+                    zone := TouchArea {
+                        clicked => { Etat.action("fiche", s.id, ""); }
+                    }
+                    HorizontalLayout {
+                        padding-left: 16px;
+                        padding-right: 16px;
+                        spacing: 20px;
+                        Text { text: s.nom; font-size: 22px; font-weight: 700; color: Theme.texte; vertical-alignment: center; overflow: elide; }
+                        Text { width: 130px; text: s.badge ? "Badge ✔" : "Badge —"; font-size: 19px; color: s.badge ? Theme.vert : Theme.gris; vertical-alignment: center; }
+                        Text { width: 130px; text: s.code ? "Code ✔" : "Code —"; font-size: 19px; color: s.code ? Theme.vert : Theme.gris; vertical-alignment: center; }
+                        Text { width: 100px; text: "Modifier ▶"; font-size: 18px; color: Theme.primaire; vertical-alignment: center; horizontal-alignment: right; }
+                    }
+                    Separateur { y: parent.height - 1px; }
+                }
+            }
+        }
+    }
+}
+
+component Champ inherits Rectangle {
+    in property <string> libelle;
+    in property <string> valeur;
+    callback clic();
+    height: 60px;
+    border-radius: Theme.rayon;
+    border-width: 2px;
+    border-color: Theme.bordure;
+    background: zone.pressed ? #E4E8EE : Theme.carte;
+    zone := TouchArea {
+        clicked => { root.clic(); }
+    }
+    HorizontalLayout {
+        padding-left: 14px;
+        padding-right: 14px;
+        spacing: 10px;
+        Text { width: 110px; text: root.libelle; font-size: 18px; color: Theme.texte-doux; vertical-alignment: center; }
+        Text { text: root.valeur; font-size: 22px; font-weight: 700; color: Theme.texte; vertical-alignment: center; overflow: elide; }
+        Text { text: "✎"; font-size: 22px; color: Theme.primaire; vertical-alignment: center; horizontal-alignment: right; }
+    }
+}
+
+export component EcranFiche inherits Rectangle {
+    background: Theme.fond;
+
+    VerticalLayout {
+        EnTete {
+            titre: Etat.fi-titre;
+            retour: "Annuler";
+            retour-clic => { Etat.action("aller", 0, "salaries"); }
+        }
+        VerticalLayout {
+            padding: 18px;
+            spacing: 12px;
+
+            HorizontalLayout {
+                spacing: 14px;
+                Champ { libelle: "Prénom"; valeur: Etat.fi-prenom; clic => { Etat.action("fi-saisir", 0, "prenom"); } }
+                Champ { libelle: "Nom"; valeur: Etat.fi-nom; clic => { Etat.action("fi-saisir", 0, "nom"); } }
+            }
+
+            Carte {
+                height: 72px;
+                HorizontalLayout {
+                    padding: 8px;
+                    padding-left: 16px;
+                    spacing: 12px;
+                    Text { width: 110px; text: "Badge"; font-size: 18px; color: Theme.texte-doux; vertical-alignment: center; }
+                    Text {
+                        text: Etat.fi-attente-badge ? "Passez la carte sur le lecteur maintenant…" : Etat.fi-badge;
+                        font-size: 21px;
+                        font-weight: 700;
+                        color: Etat.fi-attente-badge ? Theme.primaire : Theme.texte;
+                        vertical-alignment: center;
+                        overflow: elide;
+                    }
+                    if !Etat.fi-attente-badge: Bouton { width: 230px; texte: "Associer un badge"; taille: 19px; clic => { Etat.action("fi-badge", 1, ""); } }
+                    if !Etat.fi-attente-badge && Etat.fi-badge != "Aucun": BoutonClair { width: 130px; texte: "Retirer"; taille: 18px; couleur: Theme.rouge; clic => { Etat.action("fi-badge", -1, ""); } }
+                    if Etat.fi-attente-badge: BoutonClair { width: 160px; texte: "Annuler"; clic => { Etat.action("fi-badge", 0, ""); } }
+                }
+            }
+
+            Carte {
+                height: 72px;
+                HorizontalLayout {
+                    padding: 8px;
+                    padding-left: 16px;
+                    spacing: 12px;
+                    Text { width: 110px; text: "Code"; font-size: 18px; color: Theme.texte-doux; vertical-alignment: center; }
+                    Text { text: Etat.fi-code; font-size: 21px; font-weight: 700; color: Theme.texte; vertical-alignment: center; overflow: elide; }
+                    Bouton { width: 230px; texte: "Nouveau code"; taille: 19px; clic => { Etat.action("fi-code", 0, ""); } }
+                }
+            }
+
+            HorizontalLayout {
+                spacing: 12px;
+                Text { width: 110px; text: "Statut"; font-size: 18px; color: Theme.texte-doux; vertical-alignment: center; }
+                Choix { width: 160px; texte: "Actif"; couleur: Theme.vert; choisi: Etat.fi-actif; clic => { Etat.fi-actif = true; } }
+                Choix { width: 160px; texte: "Inactif"; couleur: Theme.gris; choisi: !Etat.fi-actif; clic => { Etat.fi-actif = false; } }
+                Rectangle { horizontal-stretch: 1; }
+            }
+
+            Text {
+                vertical-stretch: 1;
+                text: Etat.fi-erreur;
+                font-size: 20px;
+                font-weight: 700;
+                color: Theme.rouge;
+                wrap: word-wrap;
+            }
+
+            HorizontalLayout {
+                alignment: end;
+                Bouton {
+                    width: 300px;
+                    height: 66px;
+                    texte: "✔  Enregistrer";
+                    couleur: Theme.vert;
+                    taille: 24px;
+                    clic => { Etat.action("fi-enregistrer", 0, ""); }
+                }
+            }
+        }
+    }
+}
+
+export component EcranExport inherits Rectangle {
+    background: Theme.fond;
+
+    VerticalLayout {
+        EnTete {
+            titre: "Export CSV (Excel)";
+            retour: "Menu";
+            retour-clic => { Etat.action("aller", 0, "menu"); }
+        }
+        VerticalLayout {
+            padding: 24px;
+            spacing: 18px;
+            Text { text: "Période"; font-size: 20px; font-weight: 700; color: Theme.texte-doux; }
+            HorizontalLayout {
+                spacing: 12px;
+                Choix { texte: "Cette semaine"; choisi: Etat.ex-periode == 0; clic => { Etat.ex-periode = 0; } }
+                Choix { texte: "Semaine dernière"; choisi: Etat.ex-periode == 1; clic => { Etat.ex-periode = 1; } }
+                Choix { texte: "Ce mois-ci"; choisi: Etat.ex-periode == 2; clic => { Etat.ex-periode = 2; } }
+                Choix { texte: "Mois dernier"; choisi: Etat.ex-periode == 3; clic => { Etat.ex-periode = 3; } }
+            }
+            Text {
+                text: "Le fichier est enregistré sur la clé USB si elle est branchée, sinon dans le dossier « exports » de la badgeuse.";
+                font-size: 18px;
+                color: Theme.texte-doux;
+                wrap: word-wrap;
+            }
+            HorizontalLayout {
+                alignment: start;
+                Bouton {
+                    width: 300px;
+                    height: 70px;
+                    texte: "Exporter";
+                    taille: 26px;
+                    clic => { Etat.action("exporter", 0, ""); }
+                }
+            }
+            Text {
+                vertical-stretch: 1;
+                text: Etat.ex-resultat;
+                font-size: 20px;
+                font-weight: 700;
+                color: Theme.texte;
+                wrap: word-wrap;
+            }
+        }
+    }
+}
+
+export component EcranJournal inherits Rectangle {
+    background: Theme.fond;
+
+    VerticalLayout {
+        EnTete {
+            titre: "Journal des modifications";
+            retour: "Menu";
+            retour-clic => { Etat.action("aller", 0, "menu"); }
+        }
+        Carte {
+            vertical-stretch: 1;
+            ListView {
+                for e in Etat.journal: Rectangle {
+                    height: 66px;
+                    VerticalLayout {
+                        padding-left: 16px;
+                        padding-right: 16px;
+                        alignment: center;
+                        HorizontalLayout {
+                            spacing: 14px;
+                            Text { width: 140px; text: e.quand; font-size: 17px; color: Theme.texte-doux; }
+                            Text { width: 110px; text: e.auteur; font-size: 17px; font-weight: 700; color: Theme.texte; }
+                            Text { text: e.action; font-size: 18px; color: Theme.texte; overflow: elide; }
+                        }
+                        if e.motif != "": Text {
+                            x: 264px;
+                            text: "Motif : " + e.motif;
+                            font-size: 16px;
+                            color: Theme.texte-doux;
+                            overflow: elide;
+                        }
+                    }
+                    Separateur { y: parent.height - 1px; }
+                }
+            }
+        }
+    }
+}
+
+export component EcranReglages inherits Rectangle {
+    background: Theme.fond;
+
+    VerticalLayout {
+        EnTete {
+            titre: "Réglages";
+            retour: "Menu";
+            retour-clic => { Etat.action("aller", 0, "menu"); }
+        }
+        VerticalLayout {
+            padding: 20px;
+            spacing: 14px;
+
+            HorizontalLayout {
+                spacing: 12px;
+                Text { width: 300px; text: "Code administrateur"; font-size: 20px; color: Theme.texte; vertical-alignment: center; }
+                BoutonClair { width: 200px; texte: "Modifier"; clic => { Etat.action("rg-code", 0, ""); } }
+                Rectangle { horizontal-stretch: 1; }
+            }
+            HorizontalLayout {
+                spacing: 12px;
+                Text { width: 300px; text: "Nom de l'établissement"; font-size: 20px; color: Theme.texte; vertical-alignment: center; }
+                BoutonClair { width: 200px; texte: "Modifier"; clic => { Etat.action("rg-nom", 0, ""); } }
+                Text { text: Etat.etablissement; font-size: 20px; font-weight: 700; color: Theme.texte; vertical-alignment: center; overflow: elide; }
+            }
+            HorizontalLayout {
+                spacing: 12px;
+                Text { width: 300px; text: "Anti double-badge"; font-size: 20px; color: Theme.texte; vertical-alignment: center; }
+                Choix { texte: "1 min"; choisi: Etat.rg-double == 1; clic => { Etat.action("rg-double", 1, ""); } }
+                Choix { texte: "2 min"; choisi: Etat.rg-double == 2; clic => { Etat.action("rg-double", 2, ""); } }
+                Choix { texte: "5 min"; choisi: Etat.rg-double == 5; clic => { Etat.action("rg-double", 5, ""); } }
+                Choix { texte: "10 min"; choisi: Etat.rg-double == 10; clic => { Etat.action("rg-double", 10, ""); } }
+            }
+            HorizontalLayout {
+                spacing: 12px;
+                Text { width: 300px; text: "Durée de la confirmation"; font-size: 20px; color: Theme.texte; vertical-alignment: center; }
+                Choix { texte: "3 s"; choisi: Etat.rg-confirmation == 3; clic => { Etat.action("rg-confirmation", 3, ""); } }
+                Choix { texte: "4 s"; choisi: Etat.rg-confirmation == 4; clic => { Etat.action("rg-confirmation", 4, ""); } }
+                Choix { texte: "6 s"; choisi: Etat.rg-confirmation == 6; clic => { Etat.action("rg-confirmation", 6, ""); } }
+                Choix { texte: "8 s"; choisi: Etat.rg-confirmation == 8; clic => { Etat.action("rg-confirmation", 8, ""); } }
+            }
+            Text {
+                vertical-stretch: 1;
+                text: Etat.rg-infos;
+                font-size: 17px;
+                color: Theme.texte-doux;
+                vertical-alignment: bottom;
+                wrap: word-wrap;
+            }
+        }
+    }
+}

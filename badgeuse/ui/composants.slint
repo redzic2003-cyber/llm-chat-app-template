@@ -1,0 +1,378 @@
+// Composants de base pensés pour le tactile : grandes zones, fort contraste.
+
+export global Theme {
+    out property <color> fond: #F2F4F7;
+    out property <color> carte: #FFFFFF;
+    out property <color> texte: #1B2430;
+    out property <color> texte-doux: #5B6675;
+    out property <color> bordure: #D5DAE1;
+    out property <color> primaire: #1F4FD1;
+    out property <color> vert: #17914F;
+    out property <color> orange: #E07B00;
+    out property <color> bleu: #2459C9;
+    out property <color> rouge: #C93434;
+    out property <color> jaune: #F2B807;
+    out property <color> gris: #8A94A3;
+    out property <length> rayon: 14px;
+
+    // 0 vert, 1 orange, 2 bleu, 3 rouge, 4 gris
+    public pure function ton(t: int) -> color {
+        if t == 0 { return vert; }
+        if t == 1 { return orange; }
+        if t == 2 { return bleu; }
+        if t == 3 { return rouge; }
+        return gris;
+    }
+}
+
+// Bouton principal.
+export component Bouton inherits Rectangle {
+    in property <string> texte;
+    in property <string> sous-texte;
+    in property <color> couleur: Theme.primaire;
+    in property <color> couleur-texte: white;
+    in property <length> taille: 22px;
+    in property <bool> actif: true;
+    callback clic();
+
+    border-radius: Theme.rayon;
+    background: !actif ? #C9CED6 : zone.pressed ? couleur.darker(0.25) : couleur;
+    min-height: 56px;
+
+    zone := TouchArea {
+        enabled: root.actif;
+        clicked => { root.clic(); }
+    }
+
+    VerticalLayout {
+        alignment: center;
+        padding: 8px;
+        spacing: 2px;
+        Text {
+            text: root.texte;
+            color: root.couleur-texte;
+            font-size: root.taille;
+            font-weight: 700;
+            horizontal-alignment: center;
+            wrap: word-wrap;
+        }
+        if root.sous-texte != "": Text {
+            text: root.sous-texte;
+            color: root.couleur-texte;
+            font-size: root.taille * 0.6;
+            horizontal-alignment: center;
+            wrap: word-wrap;
+        }
+    }
+}
+
+// Bouton secondaire (fond blanc, bordure).
+export component BoutonClair inherits Rectangle {
+    in property <string> texte;
+    in property <color> couleur: Theme.texte;
+    in property <length> taille: 20px;
+    callback clic();
+
+    border-radius: Theme.rayon;
+    border-width: 2px;
+    border-color: Theme.bordure;
+    background: zone.pressed ? #E4E8EE : Theme.carte;
+    min-height: 52px;
+
+    zone := TouchArea {
+        clicked => { root.clic(); }
+    }
+
+    Text {
+        text: root.texte;
+        color: root.couleur;
+        font-size: root.taille;
+        font-weight: 600;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+    }
+}
+
+// Pastille à choix (sélectionnée = pleine).
+export component Choix inherits Rectangle {
+    in property <string> texte;
+    in property <bool> choisi;
+    in property <color> couleur: Theme.primaire;
+    in property <length> taille: 19px;
+    callback clic();
+
+    border-radius: Theme.rayon;
+    border-width: 2px;
+    border-color: choisi ? couleur : Theme.bordure;
+    background: choisi ? couleur : zone.pressed ? #E4E8EE : Theme.carte;
+    min-height: 50px;
+    min-width: 90px;
+
+    zone := TouchArea {
+        clicked => { root.clic(); }
+    }
+
+    Text {
+        text: root.texte;
+        color: root.choisi ? white : Theme.texte;
+        font-size: root.taille;
+        font-weight: 600;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+    }
+}
+
+// Barre de titre des écrans secondaires.
+export component EnTete inherits Rectangle {
+    in property <string> titre;
+    in property <string> retour: "Retour";
+    in property <string> droite;
+    callback retour-clic();
+
+    height: 64px;
+    background: Theme.carte;
+
+    HorizontalLayout {
+        padding-left: 12px;
+        padding-right: 16px;
+        spacing: 12px;
+        alignment: space-between;
+
+        Rectangle {
+            width: 150px;
+            if root.retour != "": BoutonClair {
+                y: 6px;
+                height: 52px;
+                width: 150px;
+                texte: "◀  " + root.retour;
+                taille: 18px;
+                clic => { root.retour-clic(); }
+            }
+        }
+        Text {
+            text: root.titre;
+            font-size: 24px;
+            font-weight: 800;
+            color: Theme.texte;
+            vertical-alignment: center;
+            horizontal-alignment: center;
+            overflow: elide;
+        }
+        Text {
+            width: 150px;
+            text: root.droite;
+            font-size: 18px;
+            color: Theme.texte-doux;
+            vertical-alignment: center;
+            horizontal-alignment: right;
+            overflow: elide;
+        }
+    }
+
+    Rectangle {
+        y: parent.height - 1px;
+        height: 1px;
+        background: Theme.bordure;
+    }
+}
+
+component Touche inherits Rectangle {
+    in property <string> texte;
+    in property <color> couleur: Theme.carte;
+    in property <color> couleur-texte: Theme.texte;
+    in property <length> taille: 32px;
+    callback clic();
+
+    border-radius: 12px;
+    border-width: 2px;
+    border-color: Theme.bordure;
+    background: zone.pressed ? couleur.darker(0.2) : couleur;
+
+    zone := TouchArea {
+        clicked => { root.clic(); }
+    }
+
+    Text {
+        text: root.texte;
+        font-size: root.taille;
+        font-weight: 700;
+        color: root.couleur-texte;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+    }
+}
+
+// Pavé numérique : émet "0".."9", "del" ou "ok".
+export component Pave inherits GridLayout {
+    callback touche(string);
+    spacing: 10px;
+
+    Row {
+        Touche { texte: "1"; clic => { root.touche("1"); } }
+        Touche { texte: "2"; clic => { root.touche("2"); } }
+        Touche { texte: "3"; clic => { root.touche("3"); } }
+    }
+    Row {
+        Touche { texte: "4"; clic => { root.touche("4"); } }
+        Touche { texte: "5"; clic => { root.touche("5"); } }
+        Touche { texte: "6"; clic => { root.touche("6"); } }
+    }
+    Row {
+        Touche { texte: "7"; clic => { root.touche("7"); } }
+        Touche { texte: "8"; clic => { root.touche("8"); } }
+        Touche { texte: "9"; clic => { root.touche("9"); } }
+    }
+    Row {
+        Touche { texte: "⌫"; couleur: #E9ECF1; clic => { root.touche("del"); } }
+        Touche { texte: "0"; clic => { root.touche("0"); } }
+        Touche { texte: "OK"; couleur: Theme.vert; couleur-texte: white; taille: 26px; clic => { root.touche("ok"); } }
+    }
+}
+
+// Points indiquant combien de chiffres ont été tapés, sans les montrer.
+export component Points inherits HorizontalLayout {
+    in property <int> saisis;
+    in property <int> total: 4;
+    spacing: 14px;
+    alignment: center;
+
+    for i in root.total: Rectangle {
+        width: 22px;
+        height: 22px;
+        border-radius: 11px;
+        border-width: 3px;
+        border-color: Theme.texte;
+        background: i < root.saisis ? Theme.texte : transparent;
+    }
+}
+
+// Réglage d'une valeur avec ▲ ▼.
+export component Molette inherits VerticalLayout {
+    in property <string> valeur;
+    callback changer(int);
+    spacing: 4px;
+    width: 96px;
+
+    Bouton { height: 54px; texte: "▲"; couleur: #E3E8F0; couleur-texte: Theme.texte; clic => { root.changer(1); } }
+    Text {
+        text: root.valeur;
+        font-size: 46px;
+        font-weight: 800;
+        color: Theme.texte;
+        horizontal-alignment: center;
+    }
+    Bouton { height: 54px; texte: "▼"; couleur: #E3E8F0; couleur-texte: Theme.texte; clic => { root.changer(-1); } }
+}
+
+// Sélecteur d'heure : émet ("h"|"m", delta).
+export component ChoixHeure inherits HorizontalLayout {
+    in property <int> heure;
+    in property <int> minute;
+    callback changer(string, int);
+    spacing: 10px;
+    alignment: center;
+
+    Molette {
+        valeur: (root.heure < 10 ? "0" : "") + root.heure;
+        changer(d) => { root.changer("h", d); }
+    }
+    Text {
+        text: ":";
+        font-size: 46px;
+        font-weight: 800;
+        vertical-alignment: center;
+        color: Theme.texte;
+    }
+    Molette {
+        valeur: (root.minute < 10 ? "0" : "") + root.minute;
+        changer(d) => { root.changer("m", d); }
+    }
+}
+
+// Carte blanche arrondie.
+export component Carte inherits Rectangle {
+    background: Theme.carte;
+    border-radius: Theme.rayon;
+    border-width: 1px;
+    border-color: Theme.bordure;
+}
+
+component ToucheClavier inherits Rectangle {
+    in property <string> texte;
+    in property <string> valeur: texte;
+    in property <color> couleur: Theme.carte;
+    in property <color> couleur-texte: Theme.texte;
+    callback appui(string);
+
+    min-width: 60px;
+    border-radius: 8px;
+    border-width: 1px;
+    border-color: Theme.bordure;
+    background: zone.pressed ? couleur.darker(0.2) : couleur;
+
+    zone := TouchArea {
+        clicked => { root.appui(root.valeur); }
+    }
+
+    Text {
+        text: root.texte;
+        font-size: 22px;
+        font-weight: 600;
+        color: root.couleur-texte;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+    }
+}
+
+// Clavier AZERTY tactile : émet un caractère, "del", "maj", "espace" ou "ok".
+export component Clavier inherits VerticalLayout {
+    in property <bool> majuscules;
+    callback appui(string);
+    spacing: 6px;
+
+    property <[string]> r1: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+    property <[string]> r2: majuscules ? ["A", "Z", "E", "R", "T", "Y", "U", "I", "O", "P"] : ["a", "z", "e", "r", "t", "y", "u", "i", "o", "p"];
+    property <[string]> r3: majuscules ? ["Q", "S", "D", "F", "G", "H", "J", "K", "L", "M"] : ["q", "s", "d", "f", "g", "h", "j", "k", "l", "m"];
+    property <[string]> r4: majuscules ? ["W", "X", "C", "V", "B", "N", "É", "È", "À", "Ç"] : ["w", "x", "c", "v", "b", "n", "é", "è", "à", "ç"];
+
+    HorizontalLayout {
+        spacing: 6px;
+        for t in root.r1: ToucheClavier { texte: t; appui(v) => { root.appui(v); } }
+    }
+    HorizontalLayout {
+        spacing: 6px;
+        for t in root.r2: ToucheClavier { texte: t; appui(v) => { root.appui(v); } }
+    }
+    HorizontalLayout {
+        spacing: 6px;
+        for t in root.r3: ToucheClavier { texte: t; appui(v) => { root.appui(v); } }
+    }
+    HorizontalLayout {
+        spacing: 6px;
+        for t in root.r4: ToucheClavier { texte: t; appui(v) => { root.appui(v); } }
+    }
+    HorizontalLayout {
+        spacing: 6px;
+        ToucheClavier {
+            horizontal-stretch: 2;
+            texte: "⇧ Maj";
+            valeur: "maj";
+            couleur: root.majuscules ? #C9D6F5 : #E9ECF1;
+            appui(v) => { root.appui(v); }
+        }
+        ToucheClavier { horizontal-stretch: 1; texte: "-"; appui(v) => { root.appui(v); } }
+        ToucheClavier { horizontal-stretch: 1; texte: "'"; appui(v) => { root.appui(v); } }
+        ToucheClavier { horizontal-stretch: 4; texte: "espace"; valeur: "espace"; appui(v) => { root.appui(v); } }
+        ToucheClavier { horizontal-stretch: 1; texte: ","; appui(v) => { root.appui(v); } }
+        ToucheClavier { horizontal-stretch: 1; texte: "."; appui(v) => { root.appui(v); } }
+        ToucheClavier { horizontal-stretch: 2; texte: "⌫"; valeur: "del"; couleur: #E9ECF1; appui(v) => { root.appui(v); } }
+        ToucheClavier {
+            horizontal-stretch: 2;
+            texte: "OK";
+            valeur: "ok";
+            couleur: Theme.vert;
+            couleur-texte: white;
+            appui(v) => { root.appui(v); }
+        }
+    }
+}

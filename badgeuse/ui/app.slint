@@ -1,0 +1,170 @@
+import { Theme, Bouton, BoutonClair, Choix, Clavier, ChoixHeure, Carte } from "composants.slint";
+import { Etat, Ecran } from "etat.slint";
+import {
+    EcranAccueil, EcranIdentification, EcranConfirmation, EcranMessage, EcranMesHeures,
+    EcranSignaler, EcranSignalerOubli, EcranSignalerAutre,
+} from "ecrans_salarie.slint";
+import {
+    EcranAdminMenu, EcranPresents, EcranHeures, EcranDetail, EcranOublis, EcranSignalements,
+    EcranSignalement, EcranSalaries, EcranFiche, EcranExport, EcranJournal, EcranReglages,
+} from "ecrans_admin.slint";
+
+export { Etat, Ecran }
+
+export component AppWindow inherits Window {
+    title: "Badgeuse";
+    preferred-width: 1024px;
+    preferred-height: 600px;
+    background: Theme.fond;
+    default-font-size: 18px;
+    forward-focus: lecteur;
+
+    // Remet le focus sur la capture du lecteur de badge.
+    public function reprendre-focus() {
+        lecteur.focus();
+    }
+
+    // Les lecteurs USB en émulation clavier « tapent » le numéro du badge puis Entrée.
+    lecteur := FocusScope {
+        property <string> tampon;
+        key-pressed(e) => {
+            if e.text == Key.Return {
+                Etat.action("badge", 0, self.tampon);
+                self.tampon = "";
+            } else {
+                self.tampon += e.text;
+            }
+            accept
+        }
+
+        if Etat.ecran == Ecran.accueil: EcranAccueil { width: 100%; height: 100%; }
+        if Etat.ecran == Ecran.identification: EcranIdentification { width: 100%; height: 100%; }
+        if Etat.ecran == Ecran.confirmation: EcranConfirmation { width: 100%; height: 100%; }
+        if Etat.ecran == Ecran.message: EcranMessage { width: 100%; height: 100%; }
+        if Etat.ecran == Ecran.mes-heures: EcranMesHeures { width: 100%; height: 100%; }
+        if Etat.ecran == Ecran.signaler: EcranSignaler { width: 100%; height: 100%; }
+        if Etat.ecran == Ecran.signaler-oubli: EcranSignalerOubli { width: 100%; height: 100%; }
+        if Etat.ecran == Ecran.signaler-autre: EcranSignalerAutre { width: 100%; height: 100%; }
+        if Etat.ecran == Ecran.admin-menu: EcranAdminMenu { width: 100%; height: 100%; }
+        if Etat.ecran == Ecran.presents: EcranPresents { width: 100%; height: 100%; }
+        if Etat.ecran == Ecran.heures: EcranHeures { width: 100%; height: 100%; }
+        if Etat.ecran == Ecran.detail: EcranDetail { width: 100%; height: 100%; }
+        if Etat.ecran == Ecran.oublis: EcranOublis { width: 100%; height: 100%; }
+        if Etat.ecran == Ecran.signalements: EcranSignalements { width: 100%; height: 100%; }
+        if Etat.ecran == Ecran.signalement: EcranSignalement { width: 100%; height: 100%; }
+        if Etat.ecran == Ecran.salaries: EcranSalaries { width: 100%; height: 100%; }
+        if Etat.ecran == Ecran.fiche: EcranFiche { width: 100%; height: 100%; }
+        if Etat.ecran == Ecran.export: EcranExport { width: 100%; height: 100%; }
+        if Etat.ecran == Ecran.journal: EcranJournal { width: 100%; height: 100%; }
+        if Etat.ecran == Ecran.reglages: EcranReglages { width: 100%; height: 100%; }
+
+        // Fenêtre de modification d'un pointage.
+        if Etat.edition-visible: Rectangle {
+            background: #000000A0;
+            TouchArea { }
+            Carte {
+                width: 760px;
+                height: 470px;
+                VerticalLayout {
+                    padding: 20px;
+                    spacing: 14px;
+                    Text {
+                        text: Etat.edition-titre;
+                        font-size: 26px;
+                        font-weight: 800;
+                        color: Theme.texte;
+                        horizontal-alignment: center;
+                    }
+                    if Etat.edition-heure-visible: ChoixHeure {
+                        heure: Etat.edition-heure;
+                        minute: Etat.edition-minute;
+                        changer(champ, d) => { Etat.action("ed-heure", d, champ); }
+                    }
+                    Text { text: "Motif (obligatoire)"; font-size: 19px; font-weight: 700; color: Theme.texte-doux; }
+                    HorizontalLayout {
+                        spacing: 10px;
+                        for m[i] in Etat.edition-motifs: Choix {
+                            texte: m;
+                            taille: 17px;
+                            choisi: Etat.edition-motif == i;
+                            clic => { Etat.edition-motif = i; }
+                        }
+                    }
+                    Rectangle { vertical-stretch: 1; }
+                    HorizontalLayout {
+                        spacing: 14px;
+                        BoutonClair { texte: "Annuler"; clic => { Etat.action("ed-annuler", 0, ""); } }
+                        Bouton {
+                            texte: Etat.edition-bouton;
+                            actif: Etat.edition-motif >= 0;
+                            couleur: Etat.edition-danger ? Theme.rouge : Theme.vert;
+                            clic => { Etat.action("ed-valider", 0, ""); }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Saisie de texte avec le clavier tactile.
+        if Etat.clavier-visible: Rectangle {
+            background: #000000A0;
+            TouchArea { }
+            Rectangle {
+                y: parent.height - self.height;
+                height: 440px;
+                background: #DDE2E9;
+                VerticalLayout {
+                    padding: 10px;
+                    spacing: 8px;
+                    HorizontalLayout {
+                        spacing: 10px;
+                        height: 56px;
+                        Text {
+                            width: 200px;
+                            text: Etat.clavier-titre;
+                            font-size: 20px;
+                            font-weight: 700;
+                            color: Theme.texte;
+                            vertical-alignment: center;
+                        }
+                        Rectangle {
+                            border-radius: 10px;
+                            background: Theme.carte;
+                            border-width: 2px;
+                            border-color: Theme.primaire;
+                            Text {
+                                x: 12px;
+                                width: parent.width - 24px;
+                                text: Etat.clavier-texte + "|";
+                                font-size: 22px;
+                                color: Theme.texte;
+                                overflow: elide;
+                            }
+                        }
+                        BoutonClair { width: 140px; texte: "Annuler"; clic => { Etat.action("clavier", 0, "annuler"); } }
+                    }
+                    Clavier {
+                        majuscules: Etat.clavier-maj;
+                        appui(t) => { Etat.action("clavier", 0, t); }
+                    }
+                }
+            }
+        }
+
+        // Petit message temporaire en bas de l'écran.
+        if Etat.notification != "": Rectangle {
+            y: parent.height - self.height - 16px;
+            x: (parent.width - self.width) / 2;
+            height: 52px;
+            width: min(parent.width - 40px, etiquette.preferred-width + 48px);
+            border-radius: 26px;
+            background: #1B2430E8;
+            etiquette := Text {
+                text: Etat.notification;
+                color: white;
+                font-size: 20px;
+                font-weight: 700;
+            }
+        }
+    }
+}

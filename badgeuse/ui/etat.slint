@@ -1,0 +1,213 @@
+// État partagé entre l'interface et le code Rust.
+// Le Rust remplit ces propriétés ; l'interface appelle `action(nom, nombre, texte)`.
+
+export enum Ecran {
+    accueil,
+    identification,
+    confirmation,
+    message,
+    mes-heures,
+    signaler,
+    signaler-oubli,
+    signaler-autre,
+    admin-menu,
+    presents,
+    heures,
+    detail,
+    oublis,
+    signalements,
+    signalement,
+    salaries,
+    fiche,
+    export,
+    journal,
+    reglages,
+}
+
+export struct LigneJour {
+    titre: string,
+    plages: string,
+    total: string,
+    alerte: bool,
+}
+
+export struct LignePresent {
+    nom: string,
+    etat: string,
+    detail: string,
+    ton: int,
+}
+
+export struct LigneSemaine {
+    id: int,
+    nom: string,
+    jours: [string],
+    total: string,
+    alerte: bool,
+}
+
+export struct LignePointage {
+    id: int,
+    nature: string,
+    heure: string,
+    note: string,
+}
+
+export struct LigneDemande {
+    id: int,
+    texte: string,
+}
+
+export struct LigneOubli {
+    salarie: int,
+    date: string,
+    nom: string,
+    jour: string,
+    texte: string,
+    demande: bool,
+}
+
+export struct LigneSignalement {
+    id: int,
+    ton: int,
+    quand: string,
+    categorie: string,
+    qui: string,
+    resume: string,
+}
+
+export struct LigneSalarie {
+    id: int,
+    nom: string,
+    badge: bool,
+    code: bool,
+}
+
+export struct LigneJournal {
+    quand: string,
+    auteur: string,
+    action: string,
+    motif: string,
+}
+
+export global Etat {
+    in-out property <Ecran> ecran: Ecran.accueil;
+    callback action(string, int, string);
+
+    // Général
+    in-out property <string> heure: "08:00";
+    in-out property <string> date: "";
+    in-out property <string> etablissement: "";
+    in-out property <string> notification: "";
+
+    // Saisie de code (accueil, identification, code admin)
+    in-out property <int> code-saisi;
+    in-out property <int> code-longueur: 4;
+    in-out property <string> pave-titre;
+    in-out property <string> pave-consigne;
+    in-out property <bool> pave-badge: true;
+
+    // Confirmation de pointage
+    in-out property <int> conf-ton;
+    in-out property <string> conf-salut;
+    in-out property <string> conf-action;
+    in-out property <string> conf-totaux;
+    in-out property <int> conf-decompte;
+
+    // Message plein écran (erreur, merci…)
+    in-out property <int> msg-ton: 3;
+    in-out property <string> msg-titre;
+    in-out property <string> msg-texte;
+    in-out property <bool> msg-signaler;
+
+    // Mes heures
+    in-out property <string> mh-nom;
+    in-out property <int> mh-periode: 1;
+    in-out property <[LigneJour]> mh-lignes;
+    in-out property <string> mh-resume;
+
+    // Formulaires de signalement
+    in-out property <string> sg-nom;
+    in-out property <string> sg-titre;
+    in-out property <int> sg-jour;
+    in-out property <int> sg-nature;
+    in-out property <int> sg-heure: 12;
+    in-out property <int> sg-minute;
+    in-out property <int> sg-motif;
+    in-out property <[string]> sg-lieux;
+    in-out property <int> sg-lieu: -1;
+    in-out property <bool> sg-montre-lieu: true;
+    in-out property <int> sg-urgence;
+    in-out property <string> sg-detail;
+    in-out property <bool> sg-anonyme-possible;
+    in-out property <bool> sg-anonyme;
+
+    // Admin : menu
+    in-out property <int> nb-presents;
+    in-out property <int> nb-salaries;
+    in-out property <int> nb-oublis;
+    in-out property <int> nb-signalements;
+
+    // Admin : listes
+    in-out property <[LignePresent]> presents;
+    in-out property <string> semaine-titre;
+    in-out property <[string]> semaine-jours;
+    in-out property <[LigneSemaine]> semaine;
+    in-out property <[LigneOubli]> oublis;
+    in-out property <bool> sig-ouverts: true;
+    in-out property <[LigneSignalement]> signalements;
+    in-out property <bool> sal-actifs: true;
+    in-out property <[LigneSalarie]> salaries;
+    in-out property <[LigneJournal]> journal;
+
+    // Admin : détail d'une journée
+    in-out property <string> det-titre;
+    in-out property <[LignePointage]> det-pointages;
+    in-out property <string> det-alerte;
+    in-out property <string> det-total;
+    in-out property <[LigneDemande]> det-demandes;
+
+    // Admin : fiche signalement
+    in-out property <string> sd-titre;
+    in-out property <string> sd-qui;
+    in-out property <string> sd-quand;
+    in-out property <string> sd-infos;
+    in-out property <string> sd-detail;
+    in-out property <string> sd-statut;
+    in-out property <bool> sd-demande;
+    in-out property <bool> sd-ouvert;
+
+    // Admin : fiche salarié
+    in-out property <string> fi-titre;
+    in-out property <string> fi-prenom;
+    in-out property <string> fi-nom;
+    in-out property <string> fi-badge;
+    in-out property <string> fi-code;
+    in-out property <bool> fi-actif: true;
+    in-out property <bool> fi-attente-badge;
+    in-out property <string> fi-erreur;
+
+    // Admin : export et réglages
+    in-out property <int> ex-periode: 3;
+    in-out property <string> ex-resultat;
+    in-out property <int> rg-double;
+    in-out property <int> rg-confirmation;
+    in-out property <string> rg-infos;
+
+    // Fenêtre de saisie de texte (clavier tactile)
+    in-out property <bool> clavier-visible;
+    in-out property <string> clavier-titre;
+    in-out property <string> clavier-texte;
+    in-out property <bool> clavier-maj;
+
+    // Fenêtre de modification d'un pointage (heure + motif)
+    in-out property <bool> edition-visible;
+    in-out property <string> edition-titre;
+    in-out property <bool> edition-heure-visible: true;
+    in-out property <int> edition-heure;
+    in-out property <int> edition-minute;
+    in-out property <[string]> edition-motifs;
+    in-out property <int> edition-motif: -1;
+    in-out property <string> edition-bouton;
+    in-out property <bool> edition-danger;
+}

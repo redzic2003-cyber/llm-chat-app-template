@@ -441,6 +441,7 @@ name = "badgeuse"
 version = "0.1.0"
 dependencies = [
  "chrono",
+ "fastrand",
  "rusqlite",
  "slint",
  "slint-build",

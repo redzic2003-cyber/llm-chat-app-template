@@ -1,0 +1,477 @@
+// Écrans vus par les salariés.
+
+import { ListView } from "std-widgets.slint";
+import { Theme, Bouton, BoutonClair, Choix, EnTete, Pave, Points, ChoixHeure, Carte } from "composants.slint";
+import { Etat } from "etat.slint";
+
+export component EcranAccueil inherits Rectangle {
+    background: Theme.fond;
+
+    HorizontalLayout {
+        padding: 20px;
+        spacing: 24px;
+
+        VerticalLayout {
+            horizontal-stretch: 1;
+            spacing: 10px;
+
+            Text {
+                text: Etat.etablissement;
+                font-size: 20px;
+                color: Theme.texte-doux;
+                horizontal-alignment: center;
+            }
+
+            // Appui long de 3 s sur l'horloge : accès administrateur.
+            Rectangle {
+                vertical-stretch: 1;
+                zone-horloge := TouchArea { }
+                Timer {
+                    interval: 3s;
+                    running: zone-horloge.pressed;
+                    triggered => { Etat.action("admin", 0, ""); }
+                }
+                VerticalLayout {
+                    alignment: center;
+                    Text {
+                        text: Etat.heure;
+                        font-size: 120px;
+                        font-weight: 800;
+                        color: Theme.texte;
+                        horizontal-alignment: center;
+                    }
+                    Text {
+                        text: Etat.date;
+                        font-size: 26px;
+                        color: Theme.texte-doux;
+                        horizontal-alignment: center;
+                    }
+                }
+            }
+
+            Rectangle {
+                height: 84px;
+                border-radius: Theme.rayon;
+                background: Theme.primaire;
+                Text {
+                    text: "Passez votre badge";
+                    color: white;
+                    font-size: 34px;
+                    font-weight: 800;
+                }
+            }
+
+            Text {
+                text: "ou tapez votre code";
+                font-size: 22px;
+                color: Theme.texte-doux;
+                horizontal-alignment: center;
+            }
+            Points {
+                saisis: Etat.code-saisi;
+                total: Etat.code-longueur;
+            }
+
+            HorizontalLayout {
+                spacing: 16px;
+                padding-top: 8px;
+                BoutonClair {
+                    texte: "Mes heures";
+                    clic => { Etat.action("demande", 0, "heures"); }
+                }
+                BoutonClair {
+                    texte: "Signaler un problème";
+                    couleur: Theme.rouge;
+                    clic => { Etat.action("demande", 0, "signaler"); }
+                }
+            }
+        }
+
+        Pave {
+            width: 400px;
+            touche(t) => { Etat.action("pave", 0, t); }
+        }
+    }
+}
+
+// Identification avant « Mes heures » / « Signaler », et code administrateur.
+export component EcranIdentification inherits Rectangle {
+    background: Theme.fond;
+
+    VerticalLayout {
+        EnTete {
+            titre: Etat.pave-titre;
+            retour: "Annuler";
+            retour-clic => { Etat.action("accueil", 0, ""); }
+        }
+        HorizontalLayout {
+            padding: 20px;
+            spacing: 24px;
+            VerticalLayout {
+                alignment: center;
+                spacing: 24px;
+                Text {
+                    text: Etat.pave-consigne;
+                    font-size: 32px;
+                    font-weight: 700;
+                    color: Theme.texte;
+                    horizontal-alignment: center;
+                    wrap: word-wrap;
+                }
+                Points {
+                    saisis: Etat.code-saisi;
+                    total: Etat.code-longueur;
+                }
+            }
+            Pave {
+                width: 400px;
+                touche(t) => { Etat.action("pave", 0, t); }
+            }
+        }
+    }
+}
+
+export component EcranConfirmation inherits Rectangle {
+    background: Theme.ton(Etat.conf-ton);
+
+    TouchArea {
+        clicked => { Etat.action("accueil", 0, ""); }
+    }
+
+    VerticalLayout {
+        padding: 28px;
+        spacing: 14px;
+
+        VerticalLayout {
+            vertical-stretch: 1;
+            alignment: center;
+            spacing: 18px;
+            Text {
+                text: Etat.conf-salut;
+                font-size: 46px;
+                font-weight: 800;
+                color: white;
+                horizontal-alignment: center;
+            }
+            Text {
+                text: Etat.conf-action;
+                font-size: 64px;
+                font-weight: 900;
+                color: white;
+                horizontal-alignment: center;
+            }
+            Text {
+                text: Etat.conf-totaux;
+                font-size: 26px;
+                color: white;
+                horizontal-alignment: center;
+            }
+        }
+
+        HorizontalLayout {
+            spacing: 16px;
+            height: 64px;
+            Bouton {
+                texte: "Mes heures";
+                couleur: #FFFFFF;
+                couleur-texte: Theme.texte;
+                clic => { Etat.action("conf", 0, "heures"); }
+            }
+            Bouton {
+                texte: "Signaler";
+                couleur: #FFFFFF;
+                couleur-texte: Theme.texte;
+                clic => { Etat.action("conf", 0, "signaler"); }
+            }
+            Bouton {
+                texte: "✖  Annuler (" + Etat.conf-decompte + ")";
+                couleur: #00000040;
+                clic => { Etat.action("conf", 0, "annuler"); }
+            }
+        }
+    }
+}
+
+export component EcranMessage inherits Rectangle {
+    background: Theme.ton(Etat.msg-ton);
+
+    TouchArea {
+        clicked => { Etat.action("accueil", 0, ""); }
+    }
+
+    VerticalLayout {
+        padding: 28px;
+        VerticalLayout {
+            vertical-stretch: 1;
+            alignment: center;
+            spacing: 20px;
+            Text {
+                text: Etat.msg-titre;
+                font-size: 54px;
+                font-weight: 900;
+                color: white;
+                horizontal-alignment: center;
+                wrap: word-wrap;
+            }
+            Text {
+                text: Etat.msg-texte;
+                font-size: 28px;
+                color: white;
+                horizontal-alignment: center;
+                wrap: word-wrap;
+            }
+        }
+        if Etat.msg-signaler: HorizontalLayout {
+            alignment: end;
+            Bouton {
+                width: 300px;
+                height: 64px;
+                texte: "Signaler un problème";
+                couleur: #FFFFFF;
+                couleur-texte: Theme.texte;
+                clic => { Etat.action("demande", 0, "signaler"); }
+            }
+        }
+    }
+}
+
+export component EcranMesHeures inherits Rectangle {
+    background: Theme.fond;
+
+    VerticalLayout {
+        EnTete {
+            titre: "Mes heures";
+            droite: Etat.mh-nom;
+            retour-clic => { Etat.action("accueil", 0, ""); }
+        }
+        VerticalLayout {
+            padding: 16px;
+            spacing: 12px;
+
+            HorizontalLayout {
+                spacing: 12px;
+                alignment: center;
+                Choix { width: 180px; texte: "Aujourd'hui"; choisi: Etat.mh-periode == 0; clic => { Etat.action("mh-periode", 0, ""); } }
+                Choix { width: 180px; texte: "Semaine"; choisi: Etat.mh-periode == 1; clic => { Etat.action("mh-periode", 1, ""); } }
+                Choix { width: 180px; texte: "Mois"; choisi: Etat.mh-periode == 2; clic => { Etat.action("mh-periode", 2, ""); } }
+            }
+
+            Carte {
+                vertical-stretch: 1;
+                ListView {
+                    for l in Etat.mh-lignes: Rectangle {
+                        height: 54px;
+                        HorizontalLayout {
+                            padding-left: 16px;
+                            padding-right: 16px;
+                            spacing: 12px;
+                            Text { width: 140px; text: l.titre; font-size: 20px; font-weight: 700; color: Theme.texte; vertical-alignment: center; }
+                            Text { text: l.plages; font-size: 20px; color: Theme.texte-doux; vertical-alignment: center; overflow: elide; }
+                            Text {
+                                width: 130px;
+                                text: (l.alerte ? "⚠ " : "") + l.total;
+                                font-size: 22px;
+                                font-weight: 700;
+                                color: l.alerte ? Theme.orange : Theme.texte;
+                                horizontal-alignment: right;
+                                vertical-alignment: center;
+                            }
+                        }
+                        Rectangle { y: parent.height - 1px; height: 1px; background: Theme.bordure; }
+                    }
+                }
+            }
+
+            HorizontalLayout {
+                spacing: 16px;
+                Text {
+                    text: Etat.mh-resume;
+                    font-size: 22px;
+                    font-weight: 700;
+                    color: Theme.texte;
+                    vertical-alignment: center;
+                }
+                BoutonClair {
+                    width: 260px;
+                    texte: "Une erreur ? Signaler";
+                    couleur: Theme.rouge;
+                    clic => { Etat.action("sg-ouvrir", 0, ""); }
+                }
+            }
+        }
+    }
+}
+
+export component EcranSignaler inherits Rectangle {
+    background: Theme.fond;
+
+    VerticalLayout {
+        EnTete {
+            titre: "Signaler un problème";
+            retour: "Annuler";
+            droite: Etat.sg-nom;
+            retour-clic => { Etat.action("accueil", 0, ""); }
+        }
+        GridLayout {
+            padding: 20px;
+            spacing: 16px;
+            Row {
+                Bouton { texte: "J'ai oublié de pointer"; sous-texte: "Indiquer l'heure réelle"; couleur: Theme.bleu; clic => { Etat.action("sg-categorie", 0, "oubli"); } }
+                Bouton { texte: "Je me suis trompé"; sous-texte: "Corriger un pointage"; couleur: Theme.bleu; clic => { Etat.action("sg-categorie", 0, "erreur"); } }
+                Bouton { texte: "Mon badge ne marche pas"; sous-texte: "Perdu, abîmé, refusé"; couleur: Theme.primaire; clic => { Etat.action("sg-categorie", 0, "badge"); } }
+            }
+            Row {
+                Bouton { texte: "Problème matériel"; sous-texte: "Poste, local, outil"; couleur: Theme.orange; clic => { Etat.action("sg-categorie", 0, "materiel"); } }
+                Bouton { texte: "Sécurité / danger"; sous-texte: "Anonyme possible"; couleur: Theme.rouge; clic => { Etat.action("sg-categorie", 0, "securite"); } }
+                Bouton { texte: "Autre"; sous-texte: "Tout le reste"; couleur: Theme.gris; clic => { Etat.action("sg-categorie", 0, "autre"); } }
+            }
+        }
+    }
+}
+
+component Libelle inherits Text {
+    font-size: 20px;
+    font-weight: 700;
+    color: Theme.texte-doux;
+}
+
+export component EcranSignalerOubli inherits Rectangle {
+    background: Theme.fond;
+
+    VerticalLayout {
+        EnTete {
+            titre: Etat.sg-titre;
+            droite: Etat.sg-nom;
+            retour-clic => { Etat.action("sg-ouvrir", 0, ""); }
+        }
+        HorizontalLayout {
+            padding: 20px;
+            spacing: 24px;
+
+            VerticalLayout {
+                spacing: 10px;
+                alignment: start;
+                Libelle { text: "Quel jour ?"; }
+                HorizontalLayout {
+                    spacing: 10px;
+                    Choix { texte: "Aujourd'hui"; choisi: Etat.sg-jour == 0; clic => { Etat.sg-jour = 0; } }
+                    Choix { texte: "Hier"; choisi: Etat.sg-jour == 1; clic => { Etat.sg-jour = 1; } }
+                    Choix { texte: "Avant-hier"; choisi: Etat.sg-jour == 2; clic => { Etat.sg-jour = 2; } }
+                }
+                Libelle { text: "Quel pointage ?"; }
+                HorizontalLayout {
+                    spacing: 10px;
+                    Choix { texte: "Arrivée"; choisi: Etat.sg-nature == 0; clic => { Etat.sg-nature = 0; } }
+                    Choix { texte: "Départ"; choisi: Etat.sg-nature == 1; clic => { Etat.sg-nature = 1; } }
+                    Choix { texte: "Retour"; choisi: Etat.sg-nature == 2; clic => { Etat.sg-nature = 2; } }
+                }
+                Libelle { text: "Pourquoi ?"; }
+                HorizontalLayout {
+                    spacing: 10px;
+                    Choix { texte: "Badge oublié"; choisi: Etat.sg-motif == 0; clic => { Etat.sg-motif = 0; } }
+                    Choix { texte: "Badgeuse en panne"; choisi: Etat.sg-motif == 1; clic => { Etat.sg-motif = 1; } }
+                    Choix { texte: "Autre"; choisi: Etat.sg-motif == 2; clic => { Etat.sg-motif = 2; } }
+                }
+                Text {
+                    text: "Votre responsable validera la correction.";
+                    font-size: 18px;
+                    color: Theme.texte-doux;
+                    wrap: word-wrap;
+                }
+            }
+
+            VerticalLayout {
+                width: 280px;
+                spacing: 16px;
+                Libelle { text: "Heure réelle"; horizontal-alignment: center; }
+                ChoixHeure {
+                    heure: Etat.sg-heure;
+                    minute: Etat.sg-minute;
+                    changer(champ, d) => { Etat.action("sg-heure", d, champ); }
+                }
+                Rectangle { vertical-stretch: 1; }
+                Bouton {
+                    height: 72px;
+                    texte: "✔  Envoyer";
+                    couleur: Theme.vert;
+                    taille: 26px;
+                    clic => { Etat.action("sg-envoyer", 0, ""); }
+                }
+            }
+        }
+    }
+}
+
+export component EcranSignalerAutre inherits Rectangle {
+    background: Theme.fond;
+
+    VerticalLayout {
+        EnTete {
+            titre: Etat.sg-titre;
+            droite: Etat.sg-anonyme ? "Anonyme" : Etat.sg-nom;
+            retour-clic => { Etat.action("sg-ouvrir", 0, ""); }
+        }
+        VerticalLayout {
+            padding: 20px;
+            spacing: 10px;
+
+            if Etat.sg-montre-lieu: Libelle { text: "Où ?"; }
+            if Etat.sg-montre-lieu: HorizontalLayout {
+                spacing: 10px;
+                for lieu[i] in Etat.sg-lieux: Choix {
+                    texte: lieu;
+                    choisi: Etat.sg-lieu == i;
+                    clic => { Etat.sg-lieu = i; }
+                }
+            }
+
+            Libelle { text: "Urgence"; }
+            HorizontalLayout {
+                spacing: 10px;
+                Choix { texte: "Normal"; couleur: Theme.vert; choisi: Etat.sg-urgence == 0; clic => { Etat.sg-urgence = 0; } }
+                Choix { texte: "Important"; couleur: Theme.orange; choisi: Etat.sg-urgence == 1; clic => { Etat.sg-urgence = 1; } }
+                Choix { texte: "Urgent"; couleur: Theme.rouge; choisi: Etat.sg-urgence == 2; clic => { Etat.sg-urgence = 2; } }
+            }
+
+            Libelle { text: "Détail (facultatif)"; }
+            Rectangle {
+                vertical-stretch: 1;
+                min-height: 70px;
+                border-radius: Theme.rayon;
+                border-width: 2px;
+                border-color: Theme.bordure;
+                background: Theme.carte;
+                TouchArea {
+                    clicked => { Etat.action("sg-detail", 0, ""); }
+                }
+                Text {
+                    x: 14px;
+                    width: parent.width - 28px;
+                    text: Etat.sg-detail == "" ? "Toucher ici pour écrire…" : Etat.sg-detail;
+                    font-size: 20px;
+                    color: Etat.sg-detail == "" ? Theme.gris : Theme.texte;
+                    wrap: word-wrap;
+                }
+            }
+
+            HorizontalLayout {
+                spacing: 16px;
+                if Etat.sg-anonyme-possible: Choix {
+                    width: 320px;
+                    texte: Etat.sg-anonyme ? "✔ Envoyer anonymement" : "Envoyer anonymement";
+                    choisi: Etat.sg-anonyme;
+                    clic => { Etat.sg-anonyme = !Etat.sg-anonyme; }
+                }
+                Rectangle { horizontal-stretch: 1; }
+                Bouton {
+                    width: 260px;
+                    height: 64px;
+                    texte: "✔  Envoyer";
+                    couleur: Theme.vert;
+                    taille: 26px;
+                    clic => { Etat.action("sg-envoyer", 0, ""); }
+                }
+            }
+        }
+    }
+}
