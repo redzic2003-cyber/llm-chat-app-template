@@ -1,4 +1,5 @@
 import type { Picture } from '@sveltejs/enhanced-img';
+import { m } from '#lib/paraglide/messages.js';
 import bureau from '#lib/assets/images/bureau-badgeuse.jpg?enhanced';
 import industrie from '#lib/assets/images/industrie.jpg?enhanced';
 import sante from '#lib/assets/images/sante.jpg?enhanced';
@@ -7,47 +8,49 @@ import evenement from '#lib/assets/images/evenement.jpg?enhanced';
 import borneMurale from '#lib/assets/images/borne-murale.jpg?enhanced';
 import borneSurPied from '#lib/assets/images/borne-sur-pied.jpg?enhanced';
 
+// Fonctions plutôt que constantes : les textes dépendent de la langue en cours.
+
 export type NavLink = { label: string; href: string };
 
-export const navLinks: NavLink[] = [
-	{ label: 'Produits', href: '#produits' },
-	{ label: 'Solutions', href: '#solutions' },
-	{ label: 'Secteurs', href: '#secteurs' },
-	{ label: 'Application', href: '#application' }
+export const navLinks = (): NavLink[] => [
+	{ label: m.nav_products(), href: '#produits' },
+	{ label: m.nav_solutions(), href: '#solutions' },
+	{ label: m.nav_sectors(), href: '#secteurs' },
+	{ label: m.nav_app(), href: '#application' }
 ];
 
 export type Sector = { title: string; text: string; image: Picture; alt: string };
 
-export const sectors: Sector[] = [
+export const sectors = (): Sector[] => [
 	{
-		title: 'Entreprises et bureaux',
-		text: 'Pointage des collaborateurs et accès aux locaux depuis une seule borne.',
+		title: m.sector_office_title(),
+		text: m.sector_office_text(),
 		image: bureau,
-		alt: 'Une collaboratrice présente son badge sur une borne murale chronoID'
+		alt: m.sector_office_alt()
 	},
 	{
-		title: 'Industrie et production',
-		text: 'Bornes robustes pour les équipes en horaires décalés.',
+		title: m.sector_industry_title(),
+		text: m.sector_industry_text(),
 		image: industrie,
-		alt: 'Un technicien en tenue de chantier badge sur une borne murale'
+		alt: m.sector_industry_alt()
 	},
 	{
-		title: 'Santé et établissements',
-		text: 'Accès sécurisés aux zones sensibles et suivi des présences.',
+		title: m.sector_health_title(),
+		text: m.sector_health_text(),
 		image: sante,
-		alt: 'Une soignante badge à l’entrée d’un service hospitalier'
+		alt: m.sector_health_alt()
 	},
 	{
-		title: 'Écoles et campus',
-		text: 'Contrôle des entrées pour étudiants, enseignants et personnel.',
+		title: m.sector_campus_title(),
+		text: m.sector_campus_text(),
 		image: campus,
-		alt: 'Un étudiant badge sur une borne murale à l’entrée d’un campus'
+		alt: m.sector_campus_alt()
 	},
 	{
-		title: 'Événements',
-		text: 'Accueil des participants sur borne autonome, sans installation lourde.',
+		title: m.sector_events_title(),
+		text: m.sector_events_text(),
 		image: evenement,
-		alt: 'Une visiteuse badge sur une borne sur pied à l’accueil d’un événement'
+		alt: m.sector_events_alt()
 	}
 ];
 
@@ -59,19 +62,19 @@ export type Product = {
 	alt: string;
 };
 
-export const products: Product[] = [
+export const products = (): Product[] => [
 	{
-		name: 'Borne murale',
-		tagline: 'Compacte, elle se fixe à l’entrée de chaque zone.',
-		features: ['Lecteur de badge sans contact', 'Écran tactile', 'Version connectée ou autonome'],
+		name: m.product_wall_name(),
+		tagline: m.product_wall_tagline(),
+		features: [m.product_wall_f1(), m.product_wall_f2(), m.product_wall_f3()],
 		image: borneMurale,
-		alt: 'Borne murale chronoID fixée sur un mur en béton'
+		alt: m.product_wall_alt()
 	},
 	{
-		name: 'Borne sur pied',
-		tagline: 'Idéale pour les halls d’accueil et les événements.',
-		features: ['Aucune fixation murale', 'Grand écran lisible', 'Déplaçable selon vos besoins'],
+		name: m.product_stand_name(),
+		tagline: m.product_stand_tagline(),
+		features: [m.product_stand_f1(), m.product_stand_f2(), m.product_stand_f3()],
 		image: borneSurPied,
-		alt: 'Borne sur pied chronoID dans un hall d’entrée'
+		alt: m.product_stand_alt()
 	}
 ];

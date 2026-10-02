@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { m } from '#lib/paraglide/messages.js';
 	import heroImage from '#lib/assets/images/bureau-badgeuse.jpg?enhanced';
 </script>
 
@@ -7,7 +8,7 @@
 	<div class="absolute inset-y-0 right-0 hidden w-[52%] lg:block">
 		<enhanced:img
 			src={heroImage}
-			alt="Une collaboratrice présente son badge sur une borne murale chronoID"
+			alt={m.hero_image_alt()}
 			class="size-full object-cover object-[60%_center]"
 			sizes="52vw"
 			fetchpriority="high"
@@ -16,18 +17,17 @@
 	</div>
 
 	<div class="relative container-page">
-		<div class="max-w-xl py-14 sm:py-20 lg:py-28">
-			<p class="eyebrow">Simple. Fiable. Évolutif.</p>
+		<div class="max-w-xl pt-28 pb-14 sm:pt-32 sm:pb-20 lg:pt-40 lg:pb-28">
+			<p class="eyebrow">{m.hero_eyebrow()}</p>
 			<h1 class="mt-5 text-4xl leading-[1.08] font-bold tracking-tight text-balance sm:text-5xl">
-				La gestion des temps devient un atout.
+				{m.hero_title()}
 			</h1>
 			<p class="mt-6 max-w-md text-lg leading-relaxed text-muted">
-				Optimisez la présence, la planification et les accès de vos équipes avec des bornes de
-				badges intuitives.
+				{m.hero_text()}
 			</p>
 			<div class="mt-9 flex flex-col gap-3 sm:flex-row">
-				<a href="#demo" class="btn-dark">Demander une démo</a>
-				<a href="#produits" class="btn-outline">Voir les produits</a>
+				<a href="#demo" class="btn-dark">{m.hero_cta_demo()}</a>
+				<a href="#produits" class="btn-outline">{m.hero_cta_products()}</a>
 			</div>
 		</div>
 

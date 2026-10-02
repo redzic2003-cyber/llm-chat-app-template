@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { m } from '#lib/paraglide/messages.js';
 	import Hero from '#lib/components/Hero.svelte';
 	import Benefits from '#lib/components/Benefits.svelte';
 	import Sectors from '#lib/components/Sectors.svelte';
@@ -9,11 +10,8 @@
 </script>
 
 <svelte:head>
-	<title>chronoID · Bornes de badges et gestion des temps</title>
-	<meta
-		name="description"
-		content="Bornes de badges connectées ou autonomes pour gérer la présence, la planification et les accès de vos équipes."
-	/>
+	<title>{m.meta_title()}</title>
+	<meta name="description" content={m.meta_description()} />
 </svelte:head>
 
 <Hero />

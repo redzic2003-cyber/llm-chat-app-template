@@ -1,3 +1,4 @@
+import { paraglideVitePlugin } from '@inlang/paraglide-js';
 import { enhancedImages } from '@sveltejs/enhanced-img';
 import tailwindcss from '@tailwindcss/vite';
 import adapter from '@sveltejs/adapter-cloudflare';
@@ -15,6 +16,14 @@ export default defineConfig({
 					filename.split(/[/\\]/).includes('node_modules') ? undefined : true
 			},
 			adapter: adapter()
+		}),
+
+		paraglideVitePlugin({
+			project: './project.inlang',
+			outdir: './src/lib/paraglide',
+			emitTsDeclarations: true,
+			// Langue lue dans l'URL : / (fr), /de, /it, /en. Compatible avec le prérendu.
+			strategy: ['url', 'baseLocale']
 		})
 	]
 });

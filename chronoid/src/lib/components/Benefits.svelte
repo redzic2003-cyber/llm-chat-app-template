@@ -3,20 +3,17 @@
 	import ShieldCheck from '@lucide/svelte/icons/shield-check';
 	import BadgeCheck from '@lucide/svelte/icons/badge-check';
 	import Leaf from '@lucide/svelte/icons/leaf';
+	import { m } from '#lib/paraglide/messages.js';
 
 	const benefits = [
-		{ icon: Clock, label: 'Gain de temps', text: 'Pointage en une seconde, sans saisie.' },
-		{
-			icon: ShieldCheck,
-			label: 'Meilleure sécurité',
-			text: 'Seules les bonnes personnes entrent.'
-		},
-		{ icon: BadgeCheck, label: 'Suivi précis', text: 'Des présences fiables, prêtes à exporter.' },
-		{ icon: Leaf, label: 'Solution durable', text: 'Matériel robuste, conçu pour durer.' }
+		{ icon: Clock, label: m.benefit_time_title(), text: m.benefit_time_text() },
+		{ icon: ShieldCheck, label: m.benefit_security_title(), text: m.benefit_security_text() },
+		{ icon: BadgeCheck, label: m.benefit_tracking_title(), text: m.benefit_tracking_text() },
+		{ icon: Leaf, label: m.benefit_durable_title(), text: m.benefit_durable_text() }
 	];
 </script>
 
-<section aria-label="Avantages" class="border-y border-line bg-white">
+<section aria-label={m.benefits_label()} class="border-y border-line bg-white">
 	<ul class="container-page grid grid-cols-2 lg:grid-cols-4">
 		{#each benefits as b, i (b.label)}
 			<li

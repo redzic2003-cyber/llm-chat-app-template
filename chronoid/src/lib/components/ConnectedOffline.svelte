@@ -2,39 +2,30 @@
 	import Wifi from '@lucide/svelte/icons/wifi';
 	import WifiOff from '@lucide/svelte/icons/wifi-off';
 	import image from '#lib/assets/images/connectee-autonome.jpg?enhanced';
+	import { m } from '#lib/paraglide/messages.js';
 
 	const modes = [
-		{
-			icon: Wifi,
-			title: 'Connectée',
-			text: 'Les pointages remontent en temps réel sur votre plateforme, depuis tous vos sites.'
-		},
-		{
-			icon: WifiOff,
-			title: 'Autonome',
-			text: 'Sans réseau, la borne enregistre tout et synchronise dès que la connexion revient.'
-		}
+		{ icon: Wifi, title: m.mode_connected_title(), text: m.mode_connected_text() },
+		{ icon: WifiOff, title: m.mode_offline_title(), text: m.mode_offline_text() }
 	];
 </script>
 
-<section id="solutions" class="scroll-mt-16 py-20 sm:py-24">
+<section id="solutions" class="scroll-mt-24 py-20 sm:py-24">
 	<div class="container-page grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
 		<enhanced:img
 			src={image}
-			alt="Deux bornes murales chronoID : l’une connectée au Wi-Fi, l’autre fonctionnant hors ligne"
+			alt={m.mode_image_alt()}
 			class="w-full rounded-2xl object-cover"
 			sizes="(min-width: 1024px) 40vw, 100vw"
 			loading="lazy"
 		/>
 
 		<div>
-			<p class="eyebrow">Connectée ou autonome</p>
-			<h2 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
-				Ça fonctionne, même sans connexion.
+			<p class="eyebrow">{m.mode_eyebrow()}</p>
+			<h2 class="mt-4 text-3xl font-bold tracking-tight text-balance sm:text-4xl">
+				{m.mode_title()}
 			</h2>
-			<p class="mt-4 text-lg text-muted">
-				Choisissez la configuration qui correspond à vos locaux. Aucune donnée n’est perdue.
-			</p>
+			<p class="mt-4 text-lg text-muted">{m.mode_text()}</p>
 
 			<ul class="mt-10 space-y-6">
 				{#each modes as mode (mode.title)}

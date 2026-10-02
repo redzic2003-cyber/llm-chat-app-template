@@ -52,3 +52,29 @@
 @utility btn-brand {
 	@apply btn bg-brand text-white hover:bg-brand-dark;
 }
+
+/* Barre de navigation en verre dépoli */
+@layer components {
+	.glass {
+		background: linear-gradient(to bottom, rgb(255 255 255 / 0.72), rgb(255 255 255 / 0.48));
+		border: 1px solid rgb(255 255 255 / 0.55);
+		box-shadow:
+			inset 0 1px 0 rgb(255 255 255 / 0.8),
+			0 0 0 1px rgb(11 18 32 / 0.05),
+			0 10px 30px -10px rgb(11 18 32 / 0.25);
+		-webkit-backdrop-filter: blur(18px) saturate(180%);
+		backdrop-filter: blur(18px) saturate(180%);
+	}
+
+	/* Menu mobile ouvert : plus opaque pour que les liens restent lisibles */
+	.glass[data-open] {
+		background: rgb(255 255 255 / 0.9);
+	}
+
+	/* Navigateurs sans backdrop-filter : fond presque opaque pour rester lisible */
+	@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+		.glass {
+			background: rgb(255 255 255 / 0.96);
+		}
+	}
+}

@@ -1,19 +1,22 @@
 <script lang="ts">
 	import Check from '@lucide/svelte/icons/check';
 	import { products } from '#lib/content.js';
+	import { m } from '#lib/paraglide/messages.js';
+
+	const items = products();
 </script>
 
-<section id="produits" class="scroll-mt-16 bg-surface py-20 sm:py-24">
+<section id="produits" class="scroll-mt-24 bg-surface py-20 sm:py-24">
 	<div class="container-page">
 		<div class="max-w-2xl">
-			<p class="eyebrow">Nos bornes de badges</p>
-			<h2 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
-				La solution adaptée à chaque besoin.
+			<p class="eyebrow">{m.products_eyebrow()}</p>
+			<h2 class="mt-4 text-3xl font-bold tracking-tight text-balance sm:text-4xl">
+				{m.products_title()}
 			</h2>
 		</div>
 
 		<ul class="mt-12 grid gap-6 md:grid-cols-2">
-			{#each products as product (product.name)}
+			{#each items as product (product.name)}
 				<li
 					class="grid overflow-hidden rounded-2xl border border-line bg-white sm:grid-cols-[2fr_3fr]"
 				>
@@ -30,12 +33,12 @@
 						<ul class="mt-6 space-y-3 text-sm">
 							{#each product.features as feature (feature)}
 								<li class="flex items-center gap-2">
-									<Check class="size-4 text-brand" aria-hidden="true" />
+									<Check class="size-4 shrink-0 text-brand" aria-hidden="true" />
 									{feature}
 								</li>
 							{/each}
 						</ul>
-						<a href="#demo" class="mt-8 btn-outline self-start">Demander un devis</a>
+						<a href="#demo" class="mt-8 btn-outline self-start">{m.products_cta()}</a>
 					</div>
 				</li>
 			{/each}
