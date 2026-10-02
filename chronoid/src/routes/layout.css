@@ -1,0 +1,54 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter';
+
+@theme {
+	--font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+
+	/* Couleurs chronoID, relevées sur la maquette 5 */
+	--color-ink: #0b1220;
+	--color-ink-soft: #1c2536;
+	--color-brand: #2f6bff;
+	--color-brand-dark: #1f52d6;
+	--color-muted: #5b6475;
+	--color-line: #e6e8ee;
+	--color-surface: #f6f7fa;
+}
+
+@layer base {
+	html {
+		scroll-behavior: smooth;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	body {
+		@apply bg-white font-sans text-ink;
+	}
+
+	:focus-visible {
+		@apply outline-2 outline-offset-2 outline-brand;
+	}
+}
+
+@utility container-page {
+	@apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+@utility eyebrow {
+	@apply text-xs font-semibold tracking-[0.18em] text-muted uppercase;
+}
+
+@utility btn {
+	@apply inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-semibold transition-colors;
+}
+
+@utility btn-dark {
+	@apply btn bg-ink text-white hover:bg-ink-soft;
+}
+
+@utility btn-outline {
+	@apply btn border border-line bg-white text-ink shadow-sm hover:border-ink/30;
+}
+
+@utility btn-brand {
+	@apply btn bg-brand text-white hover:bg-brand-dark;
+}
