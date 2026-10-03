@@ -23,9 +23,15 @@ npm run gen       # régénère les types Cloudflare après un changement de wra
 - `src/lib/assets/images/` : visuels, optimisés au build (AVIF/WebP) via `<enhanced:img>`
 - `src/routes/layout.css` : couleurs et styles chronoID (`@theme`)
 
+## Adresse
+
+Le site est servi sous **qrexpress.ch/frontend** : `/frontend/` (français), `/frontend/de`, `/frontend/it`,
+`/frontend/en`, et `/frontend/contact` dans chaque langue. Le sous-chemin est défini à un seul endroit,
+`src/lib/base-path.ts` ; les routes Cloudflare sont dans `wrangler.jsonc`.
+
 ## Langues
 
-Quatre langues, une page prérendue par langue : `/` (français, par défaut), `/de`, `/it`, `/en`.
+Quatre langues, une page prérendue par langue (voir Adresse).
 
 - Les textes sont dans `messages/{fr,de,it,en}.json`, avec les mêmes clés dans chaque fichier.
 - Dans un composant : `import { m } from '#lib/paraglide/messages.js'`, puis `{m.hero_title()}`.
@@ -72,3 +78,7 @@ Pour tester avec Wrangler : `cp .dev.vars.example .dev.vars`, puis `npm run buil
 4. **Variables non secrètes** : les ajouter dans `wrangler.jsonc` sous `"vars"` (`PUBLIC_TURNSTILE_SITE_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL`).
 5. **Déployer** : `npm run build && npx wrangler deploy`, ou connecter le dépôt GitHub dans
    Cloudflare (Workers Builds, dossier racine `chronoid`) pour déployer à chaque push.
+
+Le domaine `qrexpress.ch` doit être géré (DNS proxifié, nuage orange) dans le même compte Cloudflare,
+sinon les routes `qrexpress.ch/frontend*` ne peuvent pas être créées. Le jeton API utilisé pour déployer
+doit avoir les droits « Workers Scripts : Modifier » (compte) et « Workers Routes : Modifier » (zone).

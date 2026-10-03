@@ -8,6 +8,12 @@
 		"binding": "ASSETS",
 		"directory": ".svelte-kit/cloudflare"
 	},
+	// Site servi sous qrexpress.ch/frontend (BASE_PATH dans src/lib/base-path.ts).
+	// La zone qrexpress.ch doit être gérée dans le même compte Cloudflare.
+	"routes": [
+		{ "pattern": "qrexpress.ch/frontend", "zone_name": "qrexpress.ch" },
+		{ "pattern": "qrexpress.ch/frontend/*", "zone_name": "qrexpress.ch" }
+	],
 	"workers_dev": true,
 	"preview_urls": true
 }

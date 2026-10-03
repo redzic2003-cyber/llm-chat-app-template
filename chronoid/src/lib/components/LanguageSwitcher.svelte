@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { m } from '#lib/paraglide/messages.js';
-	import { getLocale, locales } from '#lib/paraglide/runtime.js';
-	import { hrefFor, localeNames } from '#lib/site.js';
+	import { deLocalizeHref, getLocale, locales } from '#lib/paraglide/runtime.js';
+	import { appPath, hrefFor, localeNames } from '#lib/site.js';
 
 	let { class: className = '' }: { class?: string } = $props();
 
@@ -15,7 +15,7 @@
 			<li>
 				<!-- Rechargement complet : chaque langue est une page prérendue distincte -->
 				<a
-					href={hrefFor(page.url.pathname, locale)}
+					href={hrefFor(appPath(deLocalizeHref(page.url.pathname)), locale)}
 					hreflang={locale}
 					lang={locale}
 					title={localeNames[locale]}
