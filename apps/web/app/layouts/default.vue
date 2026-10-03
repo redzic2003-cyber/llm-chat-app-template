@@ -24,7 +24,7 @@ const isActive = (to: string) => (to === "/" ? route.path === "/" : route.path.s
         <img src="/favicon.svg" alt="" width="28" height="28" />
         <div>
           <strong>{{ config.public.appName }}</strong>
-          <span class="subtle">Formations & présences</span>
+          <span class="subtle">Présences & rapports</span>
         </div>
       </div>
       <nav>

@@ -1,5 +1,5 @@
 [Unit]
-Description=Training Manager — sauvegarde SQLite chiffrée
+Description=Livoti Formations — sauvegarde SQLite chiffrée
 After=network-online.target
 Wants=network-online.target
 

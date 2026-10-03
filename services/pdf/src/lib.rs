@@ -1,4 +1,4 @@
-//! Service PDF du Training Manager.
+//! Service PDF de Livoti Formations.
 //!
 //! Il reçoit un JSON déjà filtré et autorisé par l'API (aucun accès à la base,
 //! aucune authentification, aucun QR) et produit uniquement des documents :

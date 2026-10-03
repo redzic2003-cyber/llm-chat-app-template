@@ -12,7 +12,7 @@ use crate::format;
 use crate::layout::{Builder, CONTENT_W, Cell, Chrome, Column, MARGIN_X, palette, render};
 use crate::model::{ReportPayload, ReportType};
 
-const APP_NAME: &str = "Training Manager";
+const APP_NAME: &str = "Livoti Formations";
 
 /// Point d'entrée : JSON validé → octets PDF.
 pub fn render_pdf(payload: &ReportPayload) -> anyhow::Result<Vec<u8>> {

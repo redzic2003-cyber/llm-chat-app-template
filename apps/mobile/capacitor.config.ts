@@ -2,7 +2,7 @@ import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
   appId: "ch.example.trainingmanager",
-  appName: "Présences",
+  appName: "Livoti Formations",
   webDir: "dist",
   server: {
     // Origine https://localhost (Android) / capacitor://localhost (iOS) : à autoriser

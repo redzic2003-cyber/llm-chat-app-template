@@ -1,5 +1,5 @@
 [Unit]
-Description=Sauvegarde quotidienne du Training Manager
+Description=Sauvegarde quotidienne de Livoti Formations
 
 [Timer]
 OnCalendar=*-*-* 02:15:00

@@ -36,7 +36,7 @@ async function submit() {
   <form class="screen login" @submit.prevent="submit">
     <div class="brand">
       <img src="/icon.svg" alt="" width="56" height="56" />
-      <h1>Présences</h1>
+      <h1>Livoti Formations</h1>
       <p class="muted">Validation des présences par QR code</p>
     </div>
     <label class="field">

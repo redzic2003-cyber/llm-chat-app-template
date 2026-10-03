@@ -1,5 +1,5 @@
 [Unit]
-Description=Training Manager — application web et API (Nuxt)
+Description=Livoti Formations — application web et API (Nuxt)
 After=network.target training-pdf.service
 Wants=training-pdf.service
 

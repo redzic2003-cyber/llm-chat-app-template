@@ -1,5 +1,5 @@
 [Unit]
-Description=Training Manager — service PDF (Rust + Krilla), écoute locale uniquement
+Description=Livoti Formations — service PDF (Rust + Krilla), écoute locale uniquement
 After=network.target
 
 [Service]

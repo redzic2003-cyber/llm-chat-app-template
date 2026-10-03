@@ -27,7 +27,7 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: { lang: "fr" },
-      title: "Training Manager",
+      title: "Livoti Formations",
       meta: [
         { charset: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
@@ -58,7 +58,7 @@ export default defineNuxtConfig({
     qrGraceHours: 24,
     organization: "",
     public: {
-      appName: "Training Manager",
+      appName: "Livoti Formations",
       appVersion,
       timezone: "Europe/Zurich",
     },

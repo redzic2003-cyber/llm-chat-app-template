@@ -1,4 +1,4 @@
-# Training Manager
+# Livoti Formations
 
 Application interne pour gérer des formations, leurs participants, la validation de présence par QR code, les statistiques et les rapports PDF.
 
