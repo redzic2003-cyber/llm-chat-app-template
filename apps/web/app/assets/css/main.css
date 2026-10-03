@@ -1,23 +1,20 @@
 /*
  * Training Manager — styles de base.
- * Fond clair, cartes sobres, typographie système, une couleur d'accent,
- * états succès / alerte / erreur clairement distincts (docs/blueprint/05-web-app.md).
+ * Fond clair, une seule police (système, sans monospace), une couleur d'accent,
+ * états succès / alerte / erreur distincts.
  */
 
 :root {
   --bg: #f5f6f8;
-  --surface: #ffffff;
+  --surface: #fff;
   --surface-2: #f9fafb;
   --border: #e2e5ea;
   --border-strong: #cdd2da;
   --text: #18212d;
   --muted: #5d6877;
   --subtle: #8a94a3;
-
   --accent: #1d4ed8;
-  --accent-hover: #1e40af;
   --accent-weak: #e9effd;
-
   --success: #157f3c;
   --success-weak: #e6f5eb;
   --warning: #a8590b;
@@ -25,15 +22,11 @@
   --danger: #b42318;
   --danger-weak: #fdecea;
   --neutral-weak: #eef0f3;
-
   --radius: 10px;
   --radius-sm: 6px;
   --shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
   --shadow-lg: 0 12px 32px rgba(16, 24, 40, 0.16);
-
   --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-
   color-scheme: light;
 }
 
@@ -43,19 +36,22 @@
   box-sizing: border-box;
 }
 
-html,
 body {
   margin: 0;
-  padding: 0;
-}
-
-body {
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font);
-  font-size: 15px;
-  line-height: 1.45;
+  font: 15px/1.45 var(--font);
   -webkit-font-smoothing: antialiased;
+}
+
+/* Les champs de formulaire héritent de la police (sinon monospace/système selon le navigateur). */
+button,
+input,
+select,
+textarea,
+code,
+pre {
+  font-family: inherit;
 }
 
 a {
@@ -69,8 +65,14 @@ a:hover {
 
 h1,
 h2,
-h3 {
+h3,
+p {
   margin: 0;
+}
+
+h1,
+h2,
+h3 {
   line-height: 1.2;
   font-weight: 650;
 }
@@ -87,18 +89,12 @@ h3 {
   font-size: 0.95rem;
 }
 
-p {
-  margin: 0;
-}
-
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
-/* ------------------------------------------------------------------ */
-/* Boutons                                                             */
-/* ------------------------------------------------------------------ */
+/* Boutons */
 
 .btn {
   display: inline-flex;
@@ -111,13 +107,10 @@ p {
   border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--text);
-  font: inherit;
-  font-weight: 550;
   font-size: 0.9rem;
-  cursor: pointer;
+  font-weight: 550;
   white-space: nowrap;
-  text-decoration: none;
-  transition: background 0.12s, border-color 0.12s;
+  cursor: pointer;
 }
 
 .btn:hover {
@@ -130,14 +123,20 @@ p {
   cursor: not-allowed;
 }
 
-.btn-primary {
+.btn-primary,
+.btn-success {
+  color: #fff;
   background: var(--accent);
   border-color: var(--accent);
-  color: #fff;
+}
+
+.btn-success {
+  background: var(--success);
+  border-color: var(--success);
 }
 
 .btn-primary:hover {
-  background: var(--accent-hover);
+  background: #1e40af;
 }
 
 .btn-danger {
@@ -147,12 +146,6 @@ p {
 
 .btn-danger:hover {
   background: var(--danger-weak);
-}
-
-.btn-success {
-  background: var(--success);
-  border-color: var(--success);
-  color: #fff;
 }
 
 .btn-ghost {
@@ -166,15 +159,7 @@ p {
   font-size: 0.82rem;
 }
 
-.btn-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-/* ------------------------------------------------------------------ */
-/* Cartes, sections                                                    */
-/* ------------------------------------------------------------------ */
+/* Mise en page */
 
 .card {
   background: var(--surface);
@@ -202,11 +187,16 @@ p {
   gap: 1rem;
 }
 
-.row {
+.row,
+.btn-group {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.75rem;
-  flex-wrap: wrap;
+}
+
+.btn-group {
+  gap: 0.5rem;
 }
 
 .spacer {
@@ -231,11 +221,8 @@ p {
 }
 
 @media (max-width: 1100px) {
+  .grid-3,
   .grid-4 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .grid-3 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -248,6 +235,8 @@ p {
   }
 }
 
+/* Texte */
+
 .muted {
   color: var(--muted);
 }
@@ -257,9 +246,10 @@ p {
   font-size: 0.85rem;
 }
 
+/* Références, matricules, empreintes : même police, chiffres alignés. */
 .mono {
-  font-family: var(--mono);
-  font-size: 0.85em;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
 }
 
 .nowrap {
@@ -270,9 +260,7 @@ p {
   text-align: right;
 }
 
-/* ------------------------------------------------------------------ */
-/* Formulaires                                                         */
-/* ------------------------------------------------------------------ */
+/* Formulaires */
 
 .field {
   display: flex;
@@ -291,9 +279,7 @@ p {
   color: var(--subtle);
 }
 
-.input,
-select.input,
-textarea.input {
+.input {
   width: 100%;
   min-height: 36px;
   padding: 0.45rem 0.65rem;
@@ -301,7 +287,6 @@ textarea.input {
   border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--text);
-  font: inherit;
   font-size: 0.92rem;
 }
 
@@ -348,36 +333,34 @@ textarea.input {
   font-size: 0.88rem;
 }
 
-/* ------------------------------------------------------------------ */
-/* Tableaux                                                            */
-/* ------------------------------------------------------------------ */
+/* Tableaux */
 
 .table-wrap {
   overflow-x: auto;
 }
 
-table.table {
+.table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.9rem;
 }
 
-.table th {
-  text-align: left;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--muted);
-  font-weight: 650;
-  padding: 0.6rem 0.9rem;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface-2);
-}
-
+.table th,
 .table td {
   padding: 0.65rem 0.9rem;
   border-bottom: 1px solid var(--border);
+  text-align: left;
   vertical-align: middle;
+}
+
+.table th {
+  padding-block: 0.6rem;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .table tr:last-child td {
@@ -396,9 +379,7 @@ table.table {
   color: var(--subtle);
 }
 
-/* ------------------------------------------------------------------ */
-/* Badges & états                                                      */
-/* ------------------------------------------------------------------ */
+/* Badges, alertes, progression */
 
 .badge {
   display: inline-flex;
@@ -406,11 +387,11 @@ table.table {
   gap: 0.3rem;
   padding: 0.12rem 0.55rem;
   border-radius: 999px;
+  background: var(--neutral-weak);
+  color: var(--muted);
   font-size: 0.78rem;
   font-weight: 600;
   white-space: nowrap;
-  background: var(--neutral-weak);
-  color: var(--muted);
 }
 
 .badge-success {
@@ -436,25 +417,16 @@ table.table {
 .alert {
   padding: 0.75rem 1rem;
   border-radius: var(--radius-sm);
-  border: 1px solid transparent;
   font-size: 0.9rem;
 }
 
 .alert-warning {
   background: var(--warning-weak);
-  border-color: #f4d9ae;
   color: #7a4207;
-}
-
-.alert-info {
-  background: var(--accent-weak);
-  border-color: #c9d7fb;
-  color: #1e3a8a;
 }
 
 .alert-success {
   background: var(--success-weak);
-  border-color: #b9e2c6;
   color: #135c2e;
 }
 
@@ -467,14 +439,12 @@ table.table {
 
 .progress > div {
   height: 100%;
-  background: var(--success);
   border-radius: inherit;
+  background: var(--success);
   transition: width 0.3s;
 }
 
-/* ------------------------------------------------------------------ */
-/* Onglets                                                             */
-/* ------------------------------------------------------------------ */
+/* Onglets et boutons segmentés */
 
 .tabs {
   display: flex;
@@ -483,17 +453,20 @@ table.table {
   overflow-x: auto;
 }
 
-.tabs button {
-  padding: 0.6rem 0.9rem;
+.tabs button,
+.segmented button {
   border: 0;
-  border-bottom: 2px solid transparent;
   background: none;
-  font: inherit;
-  font-weight: 600;
-  font-size: 0.9rem;
   color: var(--muted);
+  font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
+}
+
+.tabs button {
+  padding: 0.6rem 0.9rem;
+  border-bottom: 2px solid transparent;
+  font-size: 0.9rem;
 }
 
 .tabs button.active {
@@ -505,20 +478,14 @@ table.table {
   display: inline-flex;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
-  overflow: hidden;
   background: var(--surface);
+  overflow: hidden;
 }
 
 .segmented button {
-  border: 0;
-  border-right: 1px solid var(--border);
-  background: none;
   padding: 0.4rem 0.75rem;
-  font: inherit;
+  border-right: 1px solid var(--border);
   font-size: 0.85rem;
-  font-weight: 550;
-  color: var(--muted);
-  cursor: pointer;
 }
 
 .segmented button:last-child {
@@ -529,10 +496,6 @@ table.table {
   background: var(--accent-weak);
   color: var(--accent);
 }
-
-/* ------------------------------------------------------------------ */
-/* Impression                                                          */
-/* ------------------------------------------------------------------ */
 
 @media print {
   body {
