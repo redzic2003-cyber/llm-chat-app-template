@@ -24,3 +24,7 @@ vite.config.ts.timestamp-*
 # Paraglide
 src/lib/paraglide
 project.inlang/cache/
+
+# Secrets locaux Wrangler
+.dev.vars*
+!.dev.vars.example

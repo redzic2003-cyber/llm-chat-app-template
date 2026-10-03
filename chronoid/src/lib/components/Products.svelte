@@ -2,6 +2,7 @@
 	import Check from '@lucide/svelte/icons/check';
 	import { products } from '#lib/content.js';
 	import { m } from '#lib/paraglide/messages.js';
+	import { contactHref } from '#lib/site.js';
 
 	const items = products();
 </script>
@@ -38,7 +39,8 @@
 								</li>
 							{/each}
 						</ul>
-						<a href="#demo" class="mt-8 btn-outline self-start">{m.products_cta()}</a>
+						<a href={contactHref('quote')} class="mt-8 btn-outline self-start">{m.products_cta()}</a
+						>
 					</div>
 				</li>
 			{/each}

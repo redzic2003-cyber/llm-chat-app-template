@@ -6,7 +6,7 @@
 	import { navLinks } from '#lib/content.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { getLocale } from '#lib/paraglide/runtime.js';
-	import { hrefFor } from '#lib/site.js';
+	import { contactHref, hrefFor } from '#lib/site.js';
 
 	let open = $state(false);
 	const links = navLinks();
@@ -29,7 +29,9 @@
 
 			<div class="flex items-center gap-3">
 				<LanguageSwitcher class="hidden md:block" />
-				<a href="#demo" class="btn-dark hidden px-4 py-2 md:inline-flex">{m.nav_contact()}</a>
+				<a href={contactHref()} class="btn-dark hidden px-4 py-2 md:inline-flex"
+					>{m.nav_contact()}</a
+				>
 				<button
 					type="button"
 					class="rounded-md p-2 md:hidden"
@@ -60,7 +62,7 @@
 				</ul>
 				<div class="flex items-center justify-between gap-4">
 					<LanguageSwitcher />
-					<a href="#demo" class="btn-dark px-4 py-2" onclick={() => (open = false)}>
+					<a href={contactHref()} class="btn-dark px-4 py-2" onclick={() => (open = false)}>
 						{m.nav_contact()}
 					</a>
 				</div>

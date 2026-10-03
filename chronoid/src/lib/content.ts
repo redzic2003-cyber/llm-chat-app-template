@@ -1,5 +1,6 @@
 import type { Picture } from '@sveltejs/enhanced-img';
 import { m } from '#lib/paraglide/messages.js';
+import { sectionHref } from '#lib/site.js';
 import bureau from '#lib/assets/images/bureau-badgeuse.jpg?enhanced';
 import industrie from '#lib/assets/images/industrie.jpg?enhanced';
 import sante from '#lib/assets/images/sante.jpg?enhanced';
@@ -13,10 +14,10 @@ import borneSurPied from '#lib/assets/images/borne-sur-pied.jpg?enhanced';
 export type NavLink = { label: string; href: string };
 
 export const navLinks = (): NavLink[] => [
-	{ label: m.nav_products(), href: '#produits' },
-	{ label: m.nav_solutions(), href: '#solutions' },
-	{ label: m.nav_sectors(), href: '#secteurs' },
-	{ label: m.nav_app(), href: '#application' }
+	{ label: m.nav_products(), href: sectionHref('produits') },
+	{ label: m.nav_solutions(), href: sectionHref('solutions') },
+	{ label: m.nav_sectors(), href: sectionHref('secteurs') },
+	{ label: m.nav_app(), href: sectionHref('application') }
 ];
 
 export type Sector = { title: string; text: string; image: Picture; alt: string };

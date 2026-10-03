@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { m } from '#lib/paraglide/messages.js';
+	import { contactHref } from '#lib/site.js';
 	import heroImage from '#lib/assets/images/bureau-badgeuse.jpg?enhanced';
 </script>
 
@@ -26,7 +27,7 @@
 				{m.hero_text()}
 			</p>
 			<div class="mt-9 flex flex-col gap-3 sm:flex-row">
-				<a href="#demo" class="btn-dark">{m.hero_cta_demo()}</a>
+				<a href={contactHref('demo')} class="btn-dark">{m.hero_cta_demo()}</a>
 				<a href="#produits" class="btn-outline">{m.hero_cta_products()}</a>
 			</div>
 		</div>
