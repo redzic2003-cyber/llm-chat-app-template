@@ -8,8 +8,6 @@ const ACCENT_HOVER = "#1e40af";
 const TEXT_MUTED = "#5d6877";
 const GRID = "#eceef2";
 const AXIS = "#cdd2da";
-/** Même police que l'interface (aucune police monospace). */
-const textStyle = { fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' };
 
 const tooltip = {
   backgroundColor: "#ffffff",
@@ -36,7 +34,6 @@ const valueAxis = {
 export function columnChart(labels: string[], values: number[], seriesName: string) {
   return {
     animationDuration: 300,
-    textStyle,
     grid: { left: 8, right: 12, top: 12, bottom: 4, containLabel: true },
     tooltip: { ...tooltip, trigger: "axis", axisPointer: { type: "shadow", shadowStyle: { color: "rgba(29,78,216,0.06)" } } },
     xAxis: { type: "category", data: labels, ...categoryAxis },
@@ -58,7 +55,6 @@ export function columnChart(labels: string[], values: number[], seriesName: stri
 export function horizontalBarChart(labels: string[], values: number[], seriesName: string) {
   return {
     animationDuration: 300,
-    textStyle,
     grid: { left: 8, right: 40, top: 4, bottom: 4, containLabel: true },
     tooltip: { ...tooltip, trigger: "axis", axisPointer: { type: "shadow", shadowStyle: { color: "rgba(29,78,216,0.06)" } } },
     xAxis: { type: "value", ...valueAxis, axisLabel: { show: false }, splitLine: { show: false } },
